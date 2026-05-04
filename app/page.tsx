@@ -1,17 +1,27 @@
+import { Suspense } from "react";
 import AdSlot from "@/components/ads/ad-slot";
+import { GameSidebar } from "@/components/home/game-sidebar";
 import { HomeControls } from "@/components/home/home-controls";
 import { PageContainer } from "@/components/layout/page-container";
 import { EmptyState } from "@/components/ui/empty-state";
 import { HomeHero } from "@/components/home/home-hero";
+import { ScriptGridSkeleton } from "@/components/ui/script-grid-skeleton";
 import { getScriptsPageData } from "@/lib/scripts";
 
 export const revalidate = 300;
 
 export default async function HomePage() {
   const { scripts, games, errorMessage } = await getScriptsPageData();
+  const gameSummaries = games
+    .map((game) => ({
+      game,
+      count: scripts.filter((script) => script.game === game).length,
+    }))
+    .sort((left, right) => right.count - left.count)
+    .slice(0, 8);
 
   return (
-    <PageContainer className="gap-6 pb-16 pt-6 sm:gap-8 sm:pt-8">
+    <PageContainer className="gap-4 pb-16 pt-4 sm:gap-6 sm:pt-6">
       <AdSlot placement="top" />
       <HomeHero totalScripts={scripts.length} totalGames={games.length} />
       {errorMessage ? (
@@ -20,7 +30,12 @@ export default async function HomePage() {
           description={errorMessage}
         />
       ) : (
-        <HomeControls initialScripts={scripts} games={games} />
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+          <Suspense fallback={<ScriptGridSkeleton />}>
+            <HomeControls initialScripts={scripts} games={games} />
+          </Suspense>
+          <GameSidebar items={gameSummaries} />
+        </div>
       )}
       {!errorMessage && scripts.length === 0 ? (
         <EmptyState

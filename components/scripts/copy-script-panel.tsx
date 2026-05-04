@@ -74,12 +74,12 @@ export default function CopyScriptPanel({
   }
 
   return (
-    <div className="surface-border sticky bottom-3 rounded-[24px] bg-panel p-4 sm:bottom-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+    <div className="surface-border sticky bottom-3 rounded-[20px] bg-panel p-4 sm:bottom-6">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
         Guarded copy
       </p>
       <button
-        className="mt-3 flex w-full items-center justify-center rounded-2xl bg-accent px-4 py-4 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
+        className="mt-3 flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
         disabled={isLocked}
         onClick={handleCopy}
         type="button"

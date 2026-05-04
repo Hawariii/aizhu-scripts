@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { ScriptCard } from "@/components/scripts/script-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -14,9 +15,11 @@ type HomeControlsProps = {
 };
 
 export function HomeControls({ games, initialScripts }: HomeControlsProps) {
+  const searchParams = useSearchParams();
+  const initialGame = searchParams.get("game")?.toLowerCase() ?? "all";
   const [search, setSearch] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("latest");
-  const [selectedGame, setSelectedGame] = useState("all");
+  const [selectedGame, setSelectedGame] = useState(initialGame);
   const deferredSearch = useDeferredValue(search);
 
   const filteredScripts = useMemo(() => {
@@ -52,26 +55,26 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
 
   return (
     <section className="space-y-6">
-      <div className="surface-border fade-in-up rounded-[24px] bg-panel p-4 sm:p-6">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_220px_220px]">
+      <div className="surface-border sticky top-3 z-20 fade-in-up rounded-[20px] bg-panel p-4 shadow-sm">
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_220px_220px]">
           <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.24em] text-foreground-muted">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Search scripts
             </span>
             <input
-              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm placeholder:text-foreground-muted"
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-foreground-muted"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by title or game"
+              placeholder="Search by title or game name"
               type="search"
               value={search}
             />
           </label>
           <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.24em] text-foreground-muted">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Filter
             </span>
             <select
-              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm"
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               value={sortMode}
             >
@@ -81,11 +84,11 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
             </select>
           </label>
           <label className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.24em] text-foreground-muted">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Game tag
             </span>
             <select
-              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm"
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
               onChange={(event) => setSelectedGame(event.target.value)}
               value={selectedGame}
             >
@@ -98,6 +101,10 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
             </select>
           </label>
         </div>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3 text-xs text-foreground-muted">
+          <span>{filteredScripts.length} scripts found</span>
+          <span>Sorted by {sortMode.replace("-", " ")}</span>
+        </div>
       </div>
 
       {filteredScripts.length === 0 ? (
@@ -106,9 +113,9 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
           description="Try a different game tag or clear the search to see more results."
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="space-y-3">
           {filteredScripts.map((script, index) => (
-            <Link href={`/scripts/${script.id}`} key={script.id}>
+            <Link className="block" href={`/scripts/${script.id}`} key={script.id}>
               <ScriptCard index={index} script={script} />
             </Link>
           ))}
