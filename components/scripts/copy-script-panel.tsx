@@ -60,7 +60,7 @@ export function CopyScriptPanel({
   }
 
   return (
-    <div className="surface-border rounded-[20px] bg-panel p-4">
+    <div className="surface-border rounded-[16px] bg-panel p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
         Copy script
       </p>

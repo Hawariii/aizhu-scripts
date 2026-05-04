@@ -1,11 +1,19 @@
+import type { ReactNode } from "react";
 import type { ScriptRecord } from "@/types/script";
 
 type ScriptBodyProps = {
+  accessPanel: ReactNode;
+  copyPanel?: ReactNode;
   isRevealed: boolean;
   script: ScriptRecord;
 };
 
-export function ScriptBody({ isRevealed, script }: ScriptBodyProps) {
+export function ScriptBody({
+  accessPanel,
+  copyPanel,
+  isRevealed,
+  script,
+}: ScriptBodyProps) {
   return (
     <article className="surface-border fade-in-up rounded-[20px] bg-panel p-5 sm:p-6">
       <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
@@ -42,6 +50,8 @@ export function ScriptBody({ isRevealed, script }: ScriptBodyProps) {
             </p>
           </div>
         )}
+        <div className="mt-4">{accessPanel}</div>
+        {copyPanel ? <div className="mt-3">{copyPanel}</div> : null}
       </div>
     </article>
   );

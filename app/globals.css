@@ -67,6 +67,17 @@ body {
   font-family: var(--font-geist-sans), sans-serif;
 }
 
+body::before {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 10%, transparent), transparent 30%),
+    radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent) 8%, transparent), transparent 26%);
+  content: "";
+  z-index: -1;
+}
+
 body::selection {
   background: color-mix(in srgb, var(--accent) 22%, transparent);
 }

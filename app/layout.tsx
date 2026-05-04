@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { AdSenseScript } from "@/components/ads/adsense-script";
 import { AnalyticsListener } from "@/components/analytics/analytics-listener";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
 import { ToastViewport } from "@/components/ui/toast-viewport";
 import "./globals.css";
 
@@ -50,7 +52,11 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <AnalyticsListener />
         </Suspense>
-        {children}
+        <div className="flex min-h-screen flex-col">
+          <SiteHeader />
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
+        </div>
         <ToastViewport />
       </body>
     </html>

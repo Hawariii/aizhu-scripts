@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { addToast } from "@/lib/toast-store";
 
 type ScriptAccessPanelProps = {
   isRevealed: boolean;
@@ -54,6 +55,10 @@ export function ScriptAccessPanel({
   function handleReveal() {
     setIsGateOpen(false);
     onReveal();
+    addToast({
+      title: "Berhasil unlock",
+      description: "Script sekarang sudah terbuka dan siap dicopy.",
+    });
     trackEvent("show_script_gate_complete", {
       scriptId,
     });
@@ -61,7 +66,7 @@ export function ScriptAccessPanel({
 
   return (
     <>
-      <div className="surface-border sticky bottom-3 rounded-[20px] bg-panel p-4 sm:bottom-6">
+      <div className="surface-border rounded-[16px] bg-panel p-4">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
           Script access
         </p>

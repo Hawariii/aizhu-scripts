@@ -20,25 +20,32 @@ export function ScriptDetailClient({
   script,
 }: ScriptDetailClientProps) {
   const [isRevealed, setIsRevealed] = useState(false);
+  const accessPanel = !isRevealed ? (
+    <ScriptAccessPanel
+      isRevealed={isRevealed}
+      onReveal={() => setIsRevealed(true)}
+      scriptId={script.id}
+    />
+  ) : null;
+  const copyPanel = isRevealed ? (
+    <CopyScriptPanel scriptId={script.id} scriptText={script.script} />
+  ) : null;
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
       <div className="space-y-6">
-        <ScriptBody isRevealed={isRevealed} script={script} />
+        <ScriptBody
+          accessPanel={accessPanel}
+          copyPanel={copyPanel}
+          isRevealed={isRevealed}
+          script={script}
+        />
         <AdInline />
         <RelatedScripts items={relatedScripts} />
       </div>
       <div className="space-y-6">
         <ScriptMetaPanel script={script} />
         <AdSlot placement="sidebar" />
-        <ScriptAccessPanel
-          isRevealed={isRevealed}
-          onReveal={() => setIsRevealed(true)}
-          scriptId={script.id}
-        />
-        {isRevealed ? (
-          <CopyScriptPanel scriptId={script.id} scriptText={script.script} />
-        ) : null}
       </div>
     </div>
   );
