@@ -9,28 +9,14 @@ type CopyScriptPanelProps = {
   scriptText: string;
 };
 
-const UNLOCK_DELAY_SECONDS = 7;
 const COOLDOWN_SECONDS = 12;
 
-export default function CopyScriptPanel({
+export function CopyScriptPanel({
   scriptId,
   scriptText,
 }: CopyScriptPanelProps) {
-  const [unlockCountdown, setUnlockCountdown] = useState(UNLOCK_DELAY_SECONDS);
   const [cooldown, setCooldown] = useState(0);
   const [isCopying, setIsCopying] = useState(false);
-
-  useEffect(() => {
-    if (unlockCountdown <= 0) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setUnlockCountdown((current) => current - 1);
-    }, 1000);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [unlockCountdown]);
 
   useEffect(() => {
     if (cooldown <= 0) {
@@ -44,7 +30,7 @@ export default function CopyScriptPanel({
     return () => window.clearTimeout(timeoutId);
   }, [cooldown]);
 
-  const isLocked = unlockCountdown > 0 || cooldown > 0 || isCopying;
+  const isLocked = cooldown > 0 || isCopying;
 
   async function handleCopy() {
     if (isLocked) {
@@ -74,9 +60,9 @@ export default function CopyScriptPanel({
   }
 
   return (
-    <div className="surface-border sticky bottom-3 rounded-[20px] bg-panel p-4 sm:bottom-6">
+    <div className="surface-border rounded-[20px] bg-panel p-4">
       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
-        Guarded copy
+        Copy script
       </p>
       <button
         className="mt-3 flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
@@ -84,17 +70,15 @@ export default function CopyScriptPanel({
         onClick={handleCopy}
         type="button"
       >
-        {unlockCountdown > 0
-          ? `Unlock in ${unlockCountdown}s`
-          : cooldown > 0
-            ? `Cooldown ${cooldown}s`
-            : isCopying
-              ? "Copying..."
-              : "Copy Script"}
+        {cooldown > 0
+          ? `Cooldown ${cooldown}s`
+          : isCopying
+            ? "Copying..."
+            : "Copy Script"}
       </button>
       <p className="mt-3 text-sm leading-6 text-foreground-muted">
-        A short unlock timer helps reduce scraping, and the cooldown blocks spam
-        clicks for {COOLDOWN_SECONDS} seconds after each copy.
+        The reveal gate is complete. Copy is now available, with a cooldown of{" "}
+        {COOLDOWN_SECONDS} seconds after each click.
       </p>
     </div>
   );

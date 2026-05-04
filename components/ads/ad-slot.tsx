@@ -3,19 +3,21 @@
 import { useEffect, useMemo, useRef } from "react";
 
 type AdSlotProps = {
-  placement: "top" | "in-content" | "bottom";
+  placement: "top" | "in-content" | "bottom" | "sidebar";
 };
 
 const placementLabel: Record<AdSlotProps["placement"], string> = {
   top: "Top Banner Ad",
   "in-content": "In-Content Ad",
   bottom: "Bottom Banner Ad",
+  sidebar: "Sidebar Ad",
 };
 
 const placementSlotMap: Record<AdSlotProps["placement"], string | undefined> = {
   top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP,
   "in-content": process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_CONTENT,
   bottom: process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM,
+  sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR,
 };
 
 declare global {
@@ -32,6 +34,10 @@ export default function AdSlot({ placement }: AdSlotProps) {
   const minHeightClass = useMemo(() => {
     if (placement === "in-content") {
       return "min-h-40";
+    }
+
+    if (placement === "sidebar") {
+      return "min-h-64";
     }
 
     return "min-h-28";

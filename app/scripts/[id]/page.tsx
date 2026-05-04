@@ -1,24 +1,9 @@
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { AdInline } from "@/components/ads/ad-inline";
 import { PageContainer } from "@/components/layout/page-container";
-import { RelatedScripts } from "@/components/scripts/related-scripts";
-import { ScriptBody } from "@/components/scripts/script-body";
-import { ScriptMetaPanel } from "@/components/scripts/script-meta-panel";
+import { ScriptDetailClient } from "@/components/scripts/script-detail-client";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { getScriptById, getScriptsPageData } from "@/lib/scripts";
-
-const CopyScriptPanel = dynamic(
-  () => import("@/components/scripts/copy-script-panel"),
-  {
-    loading: () => (
-      <div className="surface-border sticky bottom-3 rounded-[24px] bg-panel p-4">
-        <div className="h-12 animate-pulse rounded-2xl bg-background-muted" />
-      </div>
-    ),
-  },
-);
 
 type ScriptDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -93,17 +78,7 @@ export default async function ScriptDetailPage({
         </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
-        <div className="space-y-6">
-          <ScriptBody script={script} />
-          <AdInline />
-          <RelatedScripts items={relatedScripts} />
-        </div>
-        <div className="space-y-6">
-          <ScriptMetaPanel script={script} />
-          <CopyScriptPanel scriptId={script.id} scriptText={script.script} />
-        </div>
-      </div>
+      <ScriptDetailClient relatedScripts={relatedScripts} script={script} />
     </PageContainer>
   );
 }
