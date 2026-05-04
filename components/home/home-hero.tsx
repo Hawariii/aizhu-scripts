@@ -5,7 +5,7 @@ type HomeHeroProps = {
 
 export function HomeHero({ totalGames, totalScripts }: HomeHeroProps) {
   return (
-    <section className="glass-panel surface-border fade-in-up overflow-hidden rounded-[34px] p-6 sm:p-8">
+    <section className="surface-border fade-in-up overflow-hidden rounded-3xl bg-panel p-6 sm:p-8">
       <div className="max-w-3xl space-y-4">
         <p className="text-xs font-semibold uppercase tracking-[0.32em] text-accent">
           Mobile-first script library
@@ -20,14 +20,14 @@ export function HomeHero({ totalGames, totalScripts }: HomeHeroProps) {
         </p>
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
-        <div className="rounded-2xl border border-border bg-white/[0.04] px-4 py-3">
-          <p className="text-2xl font-semibold text-white">{totalScripts}</p>
+        <div className="rounded-2xl border border-border bg-background-muted px-4 py-3">
+          <p className="text-2xl font-semibold">{totalScripts}</p>
           <p className="text-xs uppercase tracking-[0.24em] text-foreground-muted">
             Scripts
           </p>
         </div>
-        <div className="rounded-2xl border border-border bg-white/[0.04] px-4 py-3">
-          <p className="text-2xl font-semibold text-white">{totalGames}</p>
+        <div className="rounded-2xl border border-border bg-background-muted px-4 py-3">
+          <p className="text-2xl font-semibold">{totalGames}</p>
           <p className="text-xs uppercase tracking-[0.24em] text-foreground-muted">
             Game tags
           </p>

@@ -8,7 +8,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="glass-panel surface-border rounded-[28px] p-6">
+    <div className="surface-border rounded-[24px] bg-panel p-6">
       <p className="text-sm uppercase tracking-[0.28em] text-foreground-muted">
         Script unavailable
       </p>
@@ -18,7 +18,7 @@ export default function Error({
           "Please retry in a moment. The database may be warming up."}
       </p>
       <button
-        className="mt-5 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-slate-950"
+        className="mt-5 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white"
         onClick={reset}
         type="button"
       >

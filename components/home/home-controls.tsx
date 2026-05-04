@@ -52,14 +52,14 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
 
   return (
     <section className="space-y-6">
-      <div className="glass-panel surface-border fade-in-up rounded-[30px] p-4 sm:p-6">
+      <div className="surface-border fade-in-up rounded-[24px] bg-panel p-4 sm:p-6">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_220px_220px]">
           <label className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Search scripts
             </span>
             <input
-              className="w-full rounded-2xl border border-border bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-foreground-muted"
+              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm placeholder:text-foreground-muted"
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search by title or game"
               type="search"
@@ -71,7 +71,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
               Filter
             </span>
             <select
-              className="w-full rounded-2xl border border-border bg-white/[0.04] px-4 py-3 text-sm text-white"
+              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm"
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               value={sortMode}
             >
@@ -85,7 +85,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
               Game tag
             </span>
             <select
-              className="w-full rounded-2xl border border-border bg-white/[0.04] px-4 py-3 text-sm text-white"
+              className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm"
               onChange={(event) => setSelectedGame(event.target.value)}
               value={selectedGame}
             >

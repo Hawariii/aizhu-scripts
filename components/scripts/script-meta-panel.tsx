@@ -8,7 +8,7 @@ type ScriptMetaPanelProps = {
 
 export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
   return (
-    <aside className="glass-panel surface-border fade-in-up rounded-[28px] p-5">
+    <aside className="surface-border fade-in-up rounded-[24px] bg-panel p-5">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-foreground-muted">
         Script details
       </p>
@@ -19,19 +19,19 @@ export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
       <dl className="mt-5 space-y-4 text-sm">
         <div className="flex items-center justify-between gap-4">
           <dt className="text-foreground-muted">Rating</dt>
-          <dd className="font-semibold text-white">{script.rating.toFixed(1)}</dd>
+          <dd className="font-semibold">{script.rating.toFixed(1)}</dd>
         </div>
         <div className="flex items-center justify-between gap-4">
           <dt className="text-foreground-muted">Last updated</dt>
-          <dd className="font-semibold text-white">{script.updatedLabel}</dd>
+          <dd className="font-semibold">{script.updatedLabel}</dd>
         </div>
         <div className="flex items-center justify-between gap-4">
           <dt className="text-foreground-muted">Created</dt>
-          <dd className="font-semibold text-white">{script.createdLabel}</dd>
+          <dd className="font-semibold">{script.createdLabel}</dd>
         </div>
-        <div className="space-y-2 rounded-[22px] border border-border bg-white/[0.03] p-4">
+        <div className="space-y-2 rounded-[20px] border border-border bg-background-muted p-4">
           <dt className="text-foreground-muted">Description</dt>
-          <dd className="leading-7 text-white">{script.description}</dd>
+          <dd className="leading-7">{script.description}</dd>
         </div>
       </dl>
     </aside>

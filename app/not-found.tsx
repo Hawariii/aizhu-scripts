@@ -4,7 +4,7 @@ import { PageContainer } from "@/components/layout/page-container";
 export default function NotFound() {
   return (
     <PageContainer className="items-center justify-center py-24">
-      <div className="glass-panel surface-border max-w-xl rounded-[32px] p-8 text-center">
+      <div className="surface-border max-w-xl rounded-[24px] bg-panel p-8 text-center">
         <p className="text-sm uppercase tracking-[0.28em] text-foreground-muted">
           404
         </p>

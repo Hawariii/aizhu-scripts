@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useMemo, useRef } from "react";
+
 type AdSlotProps = {
   placement: "top" | "in-content" | "bottom";
 };
@@ -8,20 +12,71 @@ const placementLabel: Record<AdSlotProps["placement"], string> = {
   bottom: "Bottom Banner Ad",
 };
 
+const placementSlotMap: Record<AdSlotProps["placement"], string | undefined> = {
+  top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP,
+  "in-content": process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_CONTENT,
+  bottom: process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM,
+};
+
+declare global {
+  interface Window {
+    adsbygoogle?: unknown[];
+  }
+}
+
 export default function AdSlot({ placement }: AdSlotProps) {
+  const initializedRef = useRef(false);
+  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+  const slot = placementSlotMap[placement];
+  const shouldRenderAds = Boolean(client && slot);
+  const minHeightClass = useMemo(() => {
+    if (placement === "in-content") {
+      return "min-h-40";
+    }
+
+    return "min-h-28";
+  }, [placement]);
+
+  useEffect(() => {
+    if (!shouldRenderAds || initializedRef.current) {
+      return;
+    }
+
+    try {
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adsbygoogle.push({});
+      initializedRef.current = true;
+    } catch {
+      initializedRef.current = false;
+    }
+  }, [shouldRenderAds]);
+
   return (
     <aside
-      aria-label={`${placementLabel[placement]} placeholder`}
-      className="glass-panel surface-border fade-in-up rounded-[26px] px-4 py-5"
+      aria-label={`${placementLabel[placement]} area`}
+      className="surface-border fade-in-up rounded-2xl bg-panel px-4 py-4"
     >
-      <div className="flex min-h-24 flex-col items-center justify-center rounded-[22px] border border-dashed border-border bg-white/[0.03] text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-foreground-muted">
-          AdSense Placeholder
-        </p>
-        <p className="mt-2 text-sm text-foreground-muted">
-          {placementLabel[placement]}
-        </p>
-      </div>
+      {shouldRenderAds ? (
+        <ins
+          className={`adsbygoogle block w-full overflow-hidden rounded-xl ${minHeightClass}`}
+          data-ad-client={client}
+          data-ad-format="auto"
+          data-ad-slot={slot}
+          data-full-width-responsive="true"
+          style={{ display: "block" }}
+        />
+      ) : (
+        <div
+          className={`flex ${minHeightClass} flex-col items-center justify-center rounded-xl border border-dashed border-border bg-background-muted text-center`}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+            Google AdSense
+          </p>
+          <p className="mt-2 text-sm text-foreground-muted">
+            {placementLabel[placement]}
+          </p>
+        </div>
+      )}
     </aside>
   );
 }

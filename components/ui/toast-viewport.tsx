@@ -35,10 +35,10 @@ export function ToastViewport() {
       <div className="flex w-full max-w-sm flex-col gap-3">
         {toasts.map((toast) => (
           <div
-            className="glass-panel surface-border pointer-events-auto rounded-2xl px-4 py-3 shadow-2xl"
+            className="surface-border pointer-events-auto rounded-2xl bg-panel px-4 py-3 shadow-lg"
             key={toast.id}
           >
-            <p className="text-sm font-semibold text-white">{toast.title}</p>
+            <p className="text-sm font-semibold">{toast.title}</p>
             <p className="mt-1 text-sm text-foreground-muted">
               {toast.description}
             </p>

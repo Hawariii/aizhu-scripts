@@ -10,7 +10,7 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
-        <div className="glass-panel surface-border max-w-lg rounded-[28px] p-8 text-center">
+        <div className="surface-border max-w-lg rounded-[24px] bg-panel p-8 text-center">
           <p className="text-sm uppercase tracking-[0.28em] text-foreground-muted">
             Unexpected error
           </p>
@@ -20,7 +20,7 @@ export default function GlobalError({
               "The page could not be rendered right now. Please try again."}
           </p>
           <button
-            className="mt-6 inline-flex rounded-full bg-accent px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-white"
+            className="mt-6 inline-flex rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-accent-strong"
             onClick={reset}
             type="button"
           >

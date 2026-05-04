@@ -11,7 +11,7 @@ export default async function HomePage() {
   const { scripts, games, errorMessage } = await getScriptsPageData();
 
   return (
-    <PageContainer className="gap-8 pb-16 pt-6 sm:pt-8">
+    <PageContainer className="gap-6 pb-16 pt-6 sm:gap-8 sm:pt-8">
       <AdSlot placement="top" />
       <HomeHero totalScripts={scripts.length} totalGames={games.length} />
       {errorMessage ? (

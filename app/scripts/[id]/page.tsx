@@ -12,8 +12,8 @@ const CopyScriptPanel = dynamic(
   () => import("@/components/scripts/copy-script-panel"),
   {
     loading: () => (
-      <div className="glass-panel surface-border sticky bottom-3 rounded-[24px] p-4">
-        <div className="h-12 animate-pulse rounded-2xl bg-white/8" />
+      <div className="surface-border sticky bottom-3 rounded-[24px] bg-panel p-4">
+        <div className="h-12 animate-pulse rounded-2xl bg-background-muted" />
       </div>
     ),
   },
@@ -71,7 +71,7 @@ export default async function ScriptDetailPage({
           <p className="text-sm uppercase tracking-[0.28em] text-foreground-muted">
             Aizhu Script Library
           </p>
-          <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
             {script.title}
           </h1>
           <p className="text-base leading-7 text-foreground-muted sm:text-lg">

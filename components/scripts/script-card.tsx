@@ -10,7 +10,7 @@ type ScriptCardProps = {
 export function ScriptCard({ index, script }: ScriptCardProps) {
   return (
     <article
-      className="glass-panel surface-border fade-in-up flex h-full flex-col rounded-[28px] p-5 hover:-translate-y-1 hover:border-accent/60"
+      className="surface-border fade-in-up flex h-full flex-col rounded-[24px] bg-panel p-5 hover:border-accent/60"
       style={{ animationDelay: `${Math.min(index * 45, 220)}ms` }}
     >
       <div className="flex items-start justify-between gap-3">
@@ -18,7 +18,7 @@ export function ScriptCard({ index, script }: ScriptCardProps) {
         <StatusBadge status={script.status} />
       </div>
       <div className="mt-5 space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight text-white">
+        <h2 className="text-xl font-semibold tracking-tight">
           {script.title}
         </h2>
         <p className="line-clamp-3 text-sm leading-7 text-foreground-muted">
