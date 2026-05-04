@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #07111f;
+  --background-muted: #0f1b2d;
+  --panel: rgba(11, 21, 38, 0.78);
+  --panel-strong: #14243d;
+  --foreground: #edf4ff;
+  --foreground-muted: #8da2c4;
+  --border: rgba(141, 162, 196, 0.18);
+  --accent: #5dd6ff;
+  --accent-strong: #26a6d1;
+  --success: #3dd68c;
+  --danger: #ff6b6b;
+  --warning: #f5c451;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-muted: var(--background-muted);
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
+  background-image:
+    radial-gradient(circle at top, rgba(93, 214, 255, 0.16), transparent 30%),
+    linear-gradient(180deg, #07111f 0%, #091423 35%, #07111f 100%);
+}
+
+body::selection {
+  background: rgba(93, 214, 255, 0.28);
+}
+
+a,
+button,
+input,
+select {
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease,
+    box-shadow 160ms ease;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(93, 214, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.glass-panel {
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.surface-border {
+  border: 1px solid var(--border);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff, #95e9ff 58%, #66d8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.fade-in-up {
+  animation: fadeInUp 480ms ease both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }

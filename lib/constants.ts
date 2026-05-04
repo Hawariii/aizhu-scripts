@@ -1,0 +1,1 @@
+export const SUPABASE_CACHE_SECONDS = 300;

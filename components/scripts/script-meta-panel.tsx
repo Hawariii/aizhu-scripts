@@ -1,0 +1,39 @@
+import { GameTagBadge } from "@/components/ui/game-tag-badge";
+import { StatusBadge } from "@/components/ui/status-badge";
+import type { ScriptRecord } from "@/types/script";
+
+type ScriptMetaPanelProps = {
+  script: ScriptRecord;
+};
+
+export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
+  return (
+    <aside className="glass-panel surface-border fade-in-up rounded-[28px] p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+        Script details
+      </p>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <GameTagBadge game={script.game} />
+        <StatusBadge status={script.status} />
+      </div>
+      <dl className="mt-5 space-y-4 text-sm">
+        <div className="flex items-center justify-between gap-4">
+          <dt className="text-foreground-muted">Rating</dt>
+          <dd className="font-semibold text-white">{script.rating.toFixed(1)}</dd>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <dt className="text-foreground-muted">Last updated</dt>
+          <dd className="font-semibold text-white">{script.updatedLabel}</dd>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <dt className="text-foreground-muted">Created</dt>
+          <dd className="font-semibold text-white">{script.createdLabel}</dd>
+        </div>
+        <div className="space-y-2 rounded-[22px] border border-border bg-white/[0.03] p-4">
+          <dt className="text-foreground-muted">Description</dt>
+          <dd className="leading-7 text-white">{script.description}</dd>
+        </div>
+      </dl>
+    </aside>
+  );
+}
