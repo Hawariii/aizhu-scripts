@@ -60,7 +60,7 @@ export default function AdSlot({ placement }: AdSlotProps) {
   return (
     <aside
       aria-label={`${placementLabel[placement]} area`}
-      className="surface-border fade-in-up rounded-2xl bg-panel px-4 py-4"
+      className="surface-border fade-in-up rounded-[24px] bg-panel px-4 py-4 sm:px-5"
     >
       {shouldRenderAds ? (
         <ins

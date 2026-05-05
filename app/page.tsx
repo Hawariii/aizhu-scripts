@@ -21,7 +21,7 @@ export default async function HomePage() {
     .slice(0, 8);
 
   return (
-    <PageContainer className="gap-4 pb-16 pt-4 sm:gap-6 sm:pt-6">
+    <PageContainer className="gap-5 pb-16 pt-5 sm:gap-7 sm:pt-7">
       <AdSlot placement="top" />
       <HomeHero totalScripts={scripts.length} totalGames={games.length} />
       {errorMessage ? (
@@ -30,7 +30,10 @@ export default async function HomePage() {
           description={errorMessage}
         />
       ) : (
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+        <div
+          className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start"
+          id="latest-scripts"
+        >
           <Suspense fallback={<ScriptGridSkeleton />}>
             <HomeControls initialScripts={scripts} games={games} />
           </Suspense>

@@ -12,7 +12,7 @@ export function RelatedScripts({ items }: RelatedScriptsProps) {
   }
 
   return (
-    <section className="surface-border rounded-[20px] bg-panel p-5">
+    <section className="surface-border rounded-[24px] bg-panel p-5 sm:p-6">
       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
         Related Scripts
       </p>

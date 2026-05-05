@@ -54,27 +54,38 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
   }, [deferredSearch, initialScripts, selectedGame, sortMode]);
 
   return (
-    <section className="space-y-6">
-      <div className="surface-border sticky top-3 z-20 fade-in-up rounded-[20px] bg-panel p-4 shadow-sm">
+    <section className="space-y-5">
+      <div className="surface-border sticky top-[88px] z-20 fade-in-up rounded-[24px] bg-panel p-4 shadow-sm sm:top-[96px] sm:p-5">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_220px_220px]">
-          <label className="space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Search scripts
-            </span>
+          <div className="flex items-center rounded-2xl border border-border bg-background px-4 py-3.5">
+            <svg
+              aria-hidden="true"
+              className="mr-3 h-4 w-4 shrink-0 text-foreground-muted"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.8"
+              />
+            </svg>
             <input
-              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-foreground-muted"
+              className="w-full bg-transparent text-sm placeholder:text-foreground-muted focus:outline-none"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by title or game name"
+              placeholder="Search scripts, games, or hub names"
               type="search"
               value={search}
             />
-          </label>
+          </div>
           <label className="space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Filter
             </span>
             <select
-              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+              className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm"
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               value={sortMode}
             >
@@ -88,7 +99,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
               Game tag
             </span>
             <select
-              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+              className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm"
               onChange={(event) => setSelectedGame(event.target.value)}
               value={selectedGame}
             >
@@ -101,7 +112,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
             </select>
           </label>
         </div>
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3 text-xs text-foreground-muted">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4 text-xs text-foreground-muted">
           <span>{filteredScripts.length} scripts found</span>
           <span>Sorted by {sortMode.replace("-", " ")}</span>
         </div>

@@ -60,7 +60,7 @@ export function CopyScriptPanel({
   }
 
   return (
-    <div className="surface-border rounded-[16px] bg-panel p-4">
+    <div className="surface-border rounded-[20px] bg-panel p-4 sm:p-5">
       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
         Copy script
       </p>
@@ -76,7 +76,7 @@ export function CopyScriptPanel({
             ? "Copying..."
             : "Copy Script"}
       </button>
-      <p className="mt-3 text-sm leading-6 text-foreground-muted">
+      <p className="mt-3 text-sm leading-7 text-foreground-muted">
         The reveal gate is complete. Copy is now available, with a cooldown of{" "}
         {COOLDOWN_SECONDS} seconds after each click.
       </p>

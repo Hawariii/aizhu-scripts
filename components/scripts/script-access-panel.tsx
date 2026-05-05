@@ -66,7 +66,7 @@ export function ScriptAccessPanel({
 
   return (
     <>
-      <div className="surface-border rounded-[16px] bg-panel p-4">
+      <div className="surface-border rounded-[20px] bg-panel p-4 sm:p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
           Script access
         </p>
@@ -77,15 +77,15 @@ export function ScriptAccessPanel({
         >
           {isRevealed ? "Script Unlocked" : "Show Script"}
         </button>
-        <p className="mt-3 text-sm leading-6 text-foreground-muted">
+        <p className="mt-3 text-sm leading-7 text-foreground-muted">
           The script stays hidden by default. Open the sponsor gate first, then
           the code and copy action become available.
         </p>
       </div>
 
       {isGateOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6">
-          <div className="surface-border w-full max-w-lg rounded-[24px] bg-panel p-5 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-6">
+          <div className="surface-border w-full max-w-lg rounded-[24px] bg-panel p-5 shadow-xl sm:p-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
               {sponsorLabel}
             </p>

@@ -50,8 +50,8 @@ export default async function ScriptDetailPage({
     .slice(0, 4);
 
   return (
-    <PageContainer className="gap-5 pb-24 pt-4 sm:gap-6 sm:pt-6">
-      <div className="surface-border fade-in-up rounded-[20px] bg-panel p-5 sm:p-6">
+    <PageContainer className="gap-5 pb-24 pt-5 sm:gap-6 sm:pt-7">
+      <div className="surface-border fade-in-up rounded-[24px] bg-panel p-5 sm:p-7">
         <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-foreground-muted">
           <span>Home</span>
           <span>/</span>
@@ -65,14 +65,14 @@ export default async function ScriptDetailPage({
             {script.game}
           </span>
         </div>
-        <div className="mt-4 max-w-3xl space-y-3">
+        <div className="mt-5 max-w-3xl space-y-3">
           <p className="text-[11px] uppercase tracking-[0.28em] text-foreground-muted">
             Script Detail
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">
             {script.title}
           </h1>
-          <p className="text-sm leading-6 text-foreground-muted sm:text-base">
+          <p className="text-base leading-7 text-foreground-muted">
             {script.description}
           </p>
         </div>
