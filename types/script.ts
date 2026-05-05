@@ -5,11 +5,14 @@ export type ScriptRow = {
   description: string;
   game: string;
   id: string;
+  published?: boolean;
   rating: number;
   script: string;
+  slug?: string;
   status: string;
   title: string;
   updated_at: string;
+  verdict?: string | null;
 };
 
 export type ScriptRecord = {
@@ -18,8 +21,10 @@ export type ScriptRecord = {
   description: string;
   game: string;
   id: string;
+  published: boolean;
   rating: number;
   script: string;
+  slug: string;
   status: ScriptStatus;
   title: string;
   updatedAt: string;
@@ -29,5 +34,13 @@ export type ScriptRecord = {
 
 export type ScriptListItem = Pick<
   ScriptRecord,
-  "description" | "game" | "id" | "rating" | "status" | "title" | "updatedAt" | "updatedLabel"
+  | "description"
+  | "game"
+  | "id"
+  | "rating"
+  | "slug"
+  | "status"
+  | "title"
+  | "updatedAt"
+  | "updatedLabel"
 >;

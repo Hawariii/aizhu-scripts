@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { createSupabaseServerClient, hasSupabaseEnv } from "@/lib/supabase";
 import { SUPABASE_CACHE_SECONDS } from "@/lib/constants";
 import type { ScriptListItem, ScriptRecord, ScriptRow, ScriptStatus } from "@/types/script";
+import { slugify } from "@/lib/utils";
 
 const VALID_STATUSES: ScriptStatus[] = ["working", "patched", "risk"];
 
@@ -12,8 +13,12 @@ const sampleScripts: ScriptRow[] = [
     game: "bloxfruit",
     description: "A fast farming helper with boss routing and sea event support.",
     script: "loadstring(game:HttpGet('https://example.com/bloxfruit.lua'))()",
+    slug: "bloxfruit-auto-farm",
     status: "working",
     rating: 4.8,
+    verdict:
+      "Working well right now. BloxFruit Auto Farm has one of the stronger recent ratings for bloxfruit, so it looks dependable if you still verify it in-game before repeated use.",
+    published: true,
     created_at: "2026-04-18T10:00:00.000Z",
     updated_at: "2026-05-02T08:00:00.000Z",
   },
@@ -23,8 +28,12 @@ const sampleScripts: ScriptRow[] = [
     game: "fisch",
     description: "Helps with repetitive fishing loops and inventory quality checks.",
     script: "loadstring(game:HttpGet('https://example.com/fisch.lua'))()",
+    slug: "fisch-catch-assist",
     status: "risk",
     rating: 4.1,
+    verdict:
+      "Marked as risk because reliability is mixed. Test on a throwaway flow first and avoid assuming long sessions will remain stable without manual checks.",
+    published: true,
     created_at: "2026-04-26T10:00:00.000Z",
     updated_at: "2026-05-03T15:45:00.000Z",
   },
@@ -34,8 +43,12 @@ const sampleScripts: ScriptRow[] = [
     game: "theforge",
     description: "Craft queue utility with path helpers and compact overlay output.",
     script: "loadstring(game:HttpGet('https://example.com/theforge.lua'))()",
+    slug: "theforge-crafter",
     status: "patched",
     rating: 3.7,
+    verdict:
+      "Patched status means this one is likely outdated. Keep it listed for reference, but expect breakage until it is refreshed against the latest theforge changes.",
+    published: true,
     created_at: "2026-03-30T10:00:00.000Z",
     updated_at: "2026-04-29T12:30:00.000Z",
   },
@@ -54,7 +67,10 @@ const getCachedScriptRows = unstable_cache(
     const supabase = createSupabaseServerClient();
     const { data, error } = await supabase
       .from("scripts")
-      .select("id,title,game,description,script,status,rating,created_at,updated_at")
+      .select(
+        "id,title,slug,game,description,verdict,script,status,rating,published,created_at,updated_at",
+      )
+      .eq("published", true)
       .order("updated_at", { ascending: false });
 
     if (error) {
@@ -100,16 +116,18 @@ function mapRowToRecord(script: ScriptRow): ScriptRecord {
   return {
     id: script.id,
     title: script.title,
+    slug: script.slug?.trim() || slugify(script.title) || script.id,
     game: script.game,
     description: script.description,
     script: script.script,
     status: normalizeStatus(script.status),
     rating: script.rating,
+    published: script.published ?? true,
     createdAt: script.created_at,
     updatedAt: script.updated_at,
     createdLabel: formatDateLabel(script.created_at),
     updatedLabel: formatDateLabel(script.updated_at),
-    verdict: buildVerdict(script),
+    verdict: script.verdict?.trim() || buildVerdict(script),
   };
 }
 
@@ -120,6 +138,7 @@ function mapRecordToListItem(script: ScriptRecord): ScriptListItem {
     game: script.game,
     description: script.description,
     rating: script.rating,
+    slug: script.slug,
     status: script.status,
     updatedAt: script.updatedAt,
     updatedLabel: script.updatedLabel,

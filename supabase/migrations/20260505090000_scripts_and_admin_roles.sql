@@ -73,6 +73,7 @@ alter table public.scripts enable row level security;
 alter table public.admin_users enable row level security;
 
 drop policy if exists "Public read access for scripts" on public.scripts;
+drop policy if exists "Public read access for published scripts" on public.scripts;
 drop policy if exists "Admins can manage scripts" on public.scripts;
 drop policy if exists "Authenticated users can read own admin role" on public.admin_users;
 drop policy if exists "Admins can read admin users" on public.admin_users;
@@ -101,3 +102,16 @@ on public.admin_users
 for select
 to authenticated
 using (public.is_admin());
+
+comment on table public.admin_users is
+'Maps Supabase Auth users to internal admin/editor roles for the admin panel.';
+
+comment on function public.is_admin(uuid) is
+'Returns true when the supplied auth.users id belongs to a user with role=admin.';
+
+-- Example: promote an existing Supabase Auth user to admin
+-- insert into public.admin_users (id, username, role)
+-- values ('YOUR_AUTH_USER_UUID', 'your-admin-name', 'admin')
+-- on conflict (id) do update
+-- set username = excluded.username,
+--     role = excluded.role;
