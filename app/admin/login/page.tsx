@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { loginAction } from "@/app/admin/actions";
-import { hasAdminAuthEnv, isAdminAuthenticated } from "@/lib/admin-auth";
+import { hasAdminSessionEnv, isAdminAuthenticated } from "@/lib/admin-auth";
+import { hasSupabaseAdminEnv } from "@/lib/supabase";
 import { PageContainer } from "@/components/layout/page-container";
 
 type AdminLoginPageProps = {
@@ -36,10 +37,11 @@ export default async function AdminLoginPage({
         <p className="mt-3 text-sm leading-6 text-foreground-muted">
           Use your private admin credentials to open the internal upload panel.
         </p>
-        {!hasAdminAuthEnv() ? (
+        {!hasAdminSessionEnv() || !hasSupabaseAdminEnv() ? (
           <div className="mt-5 rounded-[16px] border border-warning/30 bg-warning/10 p-4 text-sm leading-6 text-foreground">
-            Fill `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET`
-            in `.env.local` before using admin auth.
+            Fill `ADMIN_SESSION_SECRET`, `NEXT_PUBLIC_SUPABASE_URL`, and
+            `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`, then run the admin
+            migration so login can verify credentials from the database.
           </div>
         ) : null}
         {error === "invalid_credentials" ? (

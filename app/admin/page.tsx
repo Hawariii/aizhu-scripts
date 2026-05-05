@@ -54,7 +54,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         {!hasSupabaseAdminEnv() ? (
           <div className="mt-6 rounded-[16px] border border-warning/30 bg-warning/10 p-4 text-sm leading-6 text-foreground">
             Fill `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in
-            `.env.local` before creating scripts from this admin panel.
+            `.env.local` before using the admin panel.
           </div>
         ) : null}
         {error === "missing_fields" ? (

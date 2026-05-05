@@ -47,14 +47,17 @@ before update on public.scripts
 for each row
 execute function public.set_updated_at();
 
-create table if not exists public.admin_users (
-  id uuid primary key references auth.users (id) on delete cascade,
+drop table if exists public.admin_users cascade;
+
+create table public.admin_users (
+  id uuid primary key default gen_random_uuid(),
   username text not null unique,
+  password_hash text not null,
   role text not null default 'admin' check (role in ('admin', 'editor')),
   created_at timestamptz not null default timezone('utc', now())
 );
 
-create or replace function public.is_admin(check_user_id uuid default auth.uid())
+create or replace function public.is_admin(check_username text)
 returns boolean
 language sql
 stable
@@ -64,7 +67,7 @@ as $$
   select exists (
     select 1
     from public.admin_users
-    where id = check_user_id
+    where username = check_username
       and role = 'admin'
   );
 $$;
@@ -75,8 +78,7 @@ alter table public.admin_users enable row level security;
 drop policy if exists "Public read access for scripts" on public.scripts;
 drop policy if exists "Public read access for published scripts" on public.scripts;
 drop policy if exists "Admins can manage scripts" on public.scripts;
-drop policy if exists "Authenticated users can read own admin role" on public.admin_users;
-drop policy if exists "Admins can read admin users" on public.admin_users;
+drop policy if exists "No direct public access to admin users" on public.admin_users;
 
 create policy "Public read access for published scripts"
 on public.scripts
@@ -84,34 +86,25 @@ for select
 to anon
 using (published = true);
 
-create policy "Admins can manage scripts"
-on public.scripts
+create policy "No direct public access to admin users"
+on public.admin_users
 for all
-to authenticated
-using (public.is_admin())
-with check (public.is_admin());
-
-create policy "Authenticated users can read own admin role"
-on public.admin_users
-for select
-to authenticated
-using (auth.uid() = id);
-
-create policy "Admins can read admin users"
-on public.admin_users
-for select
-to authenticated
-using (public.is_admin());
+to public
+using (false)
+with check (false);
 
 comment on table public.admin_users is
-'Maps Supabase Auth users to internal admin/editor roles for the admin panel.';
+'Stores internal admin/editor credentials and roles for the admin panel.';
 
-comment on function public.is_admin(uuid) is
-'Returns true when the supplied auth.users id belongs to a user with role=admin.';
+comment on function public.is_admin(text) is
+'Returns true when the supplied username belongs to a user with role=admin.';
 
--- Example: promote an existing Supabase Auth user to admin
--- insert into public.admin_users (id, username, role)
--- values ('YOUR_AUTH_USER_UUID', 'your-admin-name', 'admin')
--- on conflict (id) do update
--- set username = excluded.username,
---     role = excluded.role;
+insert into public.admin_users (username, password_hash, role)
+values (
+  'rani1325',
+  'scrypt:dbb0d69ae4adc19125c208c9fb23bafd:66fd31d606c55750f35813512c3a2450ac0ef5eaca4c90088310f57a9262259bf666f74feb10b2e6d487f08fc65e4d558f82010765c56f6916cc1c4491717928',
+  'admin'
+)
+on conflict (username) do update
+set password_hash = excluded.password_hash,
+    role = excluded.role;

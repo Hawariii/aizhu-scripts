@@ -18,12 +18,13 @@ function getField(formData: FormData, key: string) {
 export async function loginAction(formData: FormData) {
   const username = getField(formData, "username");
   const password = getField(formData, "password");
+  const adminUser = await verifyAdminCredentials(username, password);
 
-  if (!verifyAdminCredentials(username, password)) {
+  if (!adminUser) {
     redirect("/admin/login?error=invalid_credentials");
   }
 
-  await createAdminSession(username);
+  await createAdminSession(adminUser);
   redirect("/admin");
 }
 
