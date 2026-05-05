@@ -33,12 +33,18 @@ export function SiteHeader() {
           >
             Latest
           </a>
-          <a
+          <Link
             className="rounded-full px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-background-muted hover:text-foreground"
-            href="#site-footer"
+            href="/about"
           >
             About
-          </a>
+          </Link>
+          <Link
+            className="rounded-full px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-background-muted hover:text-foreground"
+            href="/privacy-policy"
+          >
+            Privacy
+          </Link>
         </nav>
       </div>
     </header>

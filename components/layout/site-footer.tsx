@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function SiteFooter() {
   return (
     <footer
@@ -13,6 +15,20 @@ export function SiteFooter() {
             convenience, but users should always review scripts carefully before
             using them.
           </p>
+          <div className="flex flex-wrap gap-3 text-sm text-foreground-muted">
+            <Link className="hover:text-foreground" href="/">
+              Home
+            </Link>
+            <Link className="hover:text-foreground" href="/about">
+              About
+            </Link>
+            <Link className="hover:text-foreground" href="/privacy-policy">
+              Privacy Policy
+            </Link>
+            <Link className="hover:text-foreground" href="/disclaimer">
+              Disclaimer
+            </Link>
+          </div>
         </div>
 
         <div className="space-y-3">

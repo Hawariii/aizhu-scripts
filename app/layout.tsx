@@ -31,6 +31,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: "Aizhu Scripts",
   category: "gaming",
+  other: {
+    "google-adsense-account":
+      process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-5205849290040938",
+  },
 };
 
 export default function RootLayout({
