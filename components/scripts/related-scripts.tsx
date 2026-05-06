@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { ScriptListItem } from "@/types/script";
 
@@ -19,16 +20,22 @@ export function RelatedScripts({ items }: RelatedScriptsProps) {
       <div className="mt-4 space-y-3">
         {items.map((item) => (
           <Link
-            className="block rounded-2xl border border-border bg-background px-4 py-4 hover:border-accent/60"
+            className="block overflow-hidden rounded-2xl border border-border bg-background hover:border-accent/60"
             href={`/scripts/${item.id}`}
             key={item.id}
           >
-            <div className="flex items-center justify-between gap-3">
-              <span className="truncate text-sm font-semibold">{item.title}</span>
-              <StatusBadge status={item.status} />
-            </div>
-            <div className="mt-2 text-[11px] uppercase tracking-[0.2em] text-foreground-muted">
-              <span className="capitalize">{item.game}</span>
+            <ScriptThumbnail
+              className="aspect-video w-full rounded-none border-0 lg:aspect-[16/8.8]"
+              script={item}
+            />
+            <div className="p-4">
+              <div className="flex items-center justify-between gap-3">
+                <span className="truncate text-sm font-semibold">{item.title}</span>
+                <StatusBadge status={item.status} />
+              </div>
+              <div className="mt-2 text-[11px] uppercase tracking-[0.2em] text-foreground-muted">
+                <span className="capitalize">{item.game}</span>
+              </div>
             </div>
           </Link>
         ))}
