@@ -6,7 +6,6 @@ export type ScriptRow = {
   game: string;
   id: string;
   published?: boolean;
-  rating: number;
   script: string;
   slug?: string;
   status: string;
@@ -22,7 +21,6 @@ export type ScriptRecord = {
   game: string;
   id: string;
   published: boolean;
-  rating: number;
   script: string;
   slug: string;
   status: ScriptStatus;
@@ -37,7 +35,6 @@ export type ScriptListItem = Pick<
   | "description"
   | "game"
   | "id"
-  | "rating"
   | "slug"
   | "status"
   | "title"

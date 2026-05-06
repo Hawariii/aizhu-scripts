@@ -45,7 +45,7 @@ export function ScriptBody({
             <p className="text-sm font-medium">Script is hidden by default.</p>
             <p className="mt-2 text-sm leading-7 text-foreground-muted">
               Use the <span className="font-medium text-foreground">Show Script</span>{" "}
-              button below to open the sponsor gate first. After that, the full
+              button below to open the support step first. After that, the full
               code and copy action will unlock here.
             </p>
           </div>

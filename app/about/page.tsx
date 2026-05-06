@@ -21,7 +21,7 @@ export default function AboutPage() {
           <p>
             Aizhu Scripts is a read-only directory that helps visitors browse
             script information quickly. Each entry focuses on the title, game,
-            status, rating, update date, and an internal verdict to give better
+            status, update date, and an internal verdict to give better
             context before a user decides to inspect the code.
           </p>
           <p>

@@ -6,7 +6,6 @@ type CreateScriptInput = {
   description: string;
   game: string;
   published: boolean;
-  rating: number;
   script: string;
   slug?: string;
   status: ScriptStatus;
@@ -36,11 +35,10 @@ export async function createScript(input: CreateScriptInput) {
       verdict: input.verdict.trim(),
       script: input.script.trim(),
       status: input.status,
-      rating: input.rating,
       published: input.published,
     })
     .select(
-      "id,title,slug,game,description,verdict,script,status,rating,published,created_at,updated_at",
+      "id,title,slug,game,description,verdict,script,status,published,created_at,updated_at",
     )
     .single();
 
@@ -60,7 +58,7 @@ export async function getAdminScripts() {
   const { data, error } = await supabase
     .from("scripts")
     .select(
-      "id,title,slug,game,description,verdict,script,status,rating,published,created_at,updated_at",
+      "id,title,slug,game,description,verdict,script,status,published,created_at,updated_at",
     )
     .order("updated_at", { ascending: false })
     .limit(20);

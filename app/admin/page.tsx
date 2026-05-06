@@ -89,12 +89,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           </label>
           <label className="block space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Rating
-            </span>
-            <input className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" defaultValue="0" max="5" min="0" name="rating" step="0.1" type="number" />
-          </label>
-          <label className="block space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Status
             </span>
             <select className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" defaultValue="working" name="status">

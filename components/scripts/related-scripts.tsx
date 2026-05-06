@@ -27,9 +27,8 @@ export function RelatedScripts({ items }: RelatedScriptsProps) {
               <span className="truncate text-sm font-semibold">{item.title}</span>
               <StatusBadge status={item.status} />
             </div>
-            <div className="mt-2 flex items-center justify-between gap-3 text-[11px] uppercase tracking-[0.2em] text-foreground-muted">
+            <div className="mt-2 text-[11px] uppercase tracking-[0.2em] text-foreground-muted">
               <span className="capitalize">{item.game}</span>
-              <span>Rating {item.rating.toFixed(1)}</span>
             </div>
           </Link>
         ))}

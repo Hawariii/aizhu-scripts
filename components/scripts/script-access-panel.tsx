@@ -14,6 +14,21 @@ function getGateDuration() {
   return Math.floor(Math.random() * 16) + 15;
 }
 
+const supportLinks = [
+  {
+    href: "https://youtube.com/@siaizhu?si=7ZK6-L4scDzCrrYS",
+    label: "Subscribe YouTube",
+  },
+  {
+    href: "https://www.tiktok.com/@siiaizhu?_r=1&_t=ZS-968MPc9uAq0",
+    label: "Follow TikTok",
+  },
+  {
+    href: "https://www.instagram.com/hawarii_bohay?igsh=MWp6bDA5YXU3YTJxag==",
+    label: "Follow Instagram",
+  },
+];
+
 export function ScriptAccessPanel({
   isRevealed,
   onReveal,
@@ -24,7 +39,7 @@ export function ScriptAccessPanel({
 
   const canReveal = countdown === 0;
   const sponsorLabel = useMemo(
-    () => (isRevealed ? "Script unlocked" : "Sponsor preview"),
+    () => (isRevealed ? "Script unlocked" : "Support Aizhu"),
     [isRevealed],
   );
 
@@ -78,8 +93,8 @@ export function ScriptAccessPanel({
           {isRevealed ? "Script Unlocked" : "Show Script"}
         </button>
         <p className="mt-3 text-sm leading-7 text-foreground-muted">
-          The script stays hidden by default. Open the sponsor gate first, then
-          the code and copy action become available.
+          Open the support panel first, then the script code and copy action
+          will unlock here.
         </p>
       </div>
 
@@ -89,23 +104,34 @@ export function ScriptAccessPanel({
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
               {sponsorLabel}
             </p>
-            <h2 className="mt-3 text-2xl font-semibold">Please wait a moment</h2>
+            <h2 className="mt-3 text-2xl font-semibold">
+              Support before reveal
+            </h2>
             <p className="mt-3 text-sm leading-6 text-foreground-muted">
-              This is a safe internal gate for sponsor space, house ads, or
-              notices. Once the timer finishes, you can reveal the script.
+              Before opening the script, support the channel on YouTube, TikTok,
+              or Instagram. After the timer finishes, you can reveal the code.
             </p>
-            <div className="mt-5 rounded-[20px] border border-dashed border-border bg-background-muted p-5 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">
-                Sponsor Placeholder
-              </p>
-              <p className="mt-3 text-sm leading-6 text-foreground-muted">
-                Replace this block with your own promo, affiliate banner, or site
-                notice. Avoid forcing Google AdSense into this gate flow.
-              </p>
+            <div className="mt-5 grid gap-3 rounded-[20px] border border-border bg-background-muted p-4">
+              {supportLinks.map((link) => (
+                <a
+                  className="flex items-center justify-between rounded-2xl border border-border bg-panel px-4 py-3 text-sm font-medium hover:border-accent/60"
+                  href={link.href}
+                  key={link.href}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <span>{link.label}</span>
+                  <span className="text-xs uppercase tracking-[0.2em] text-foreground-muted">
+                    Open
+                  </span>
+                </a>
+              ))}
             </div>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-foreground-muted">
-                {canReveal ? "You can reveal the script now." : `Unlocking in ${countdown}s`}
+                {canReveal
+                  ? "Support step finished. You can reveal the script now."
+                  : `Unlocking in ${countdown}s`}
               </p>
               <button
                 className="rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
@@ -113,7 +139,7 @@ export function ScriptAccessPanel({
                 onClick={handleReveal}
                 type="button"
               >
-                Reveal Script
+                Unlock Script
               </button>
             </div>
           </div>

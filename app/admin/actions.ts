@@ -43,7 +43,6 @@ export async function createScriptAction(formData: FormData) {
   const verdict = getField(formData, "verdict");
   const script = getField(formData, "script");
   const status = getField(formData, "status") as ScriptStatus;
-  const ratingRaw = Number(getField(formData, "rating"));
   const published = formData.get("published") === "on";
 
   if (
@@ -65,7 +64,6 @@ export async function createScriptAction(formData: FormData) {
     verdict,
     script,
     status,
-    rating: Number.isFinite(ratingRaw) ? ratingRaw : 0,
     published,
   });
 

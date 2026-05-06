@@ -7,7 +7,7 @@ import { ScriptCard } from "@/components/scripts/script-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { ScriptListItem } from "@/types/script";
 
-type SortMode = "latest" | "working" | "top-rated";
+type SortMode = "latest" | "working";
 
 type HomeControlsProps = {
   games: string[];
@@ -40,24 +40,20 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
       nextScripts = nextScripts.filter((script) => script.status === "working");
     }
 
-    nextScripts = [...nextScripts].sort((left, right) => {
-      if (sortMode === "top-rated") {
-        return right.rating - left.rating;
-      }
-
-      return (
-        new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
-      );
-    });
+    nextScripts = [...nextScripts].sort(
+      (left, right) =>
+        new Date(right.updatedAt).getTime() -
+        new Date(left.updatedAt).getTime(),
+    );
 
     return nextScripts;
   }, [deferredSearch, initialScripts, selectedGame, sortMode]);
 
   return (
-    <section className="space-y-5">
-      <div className="surface-border sticky top-[88px] z-20 fade-in-up rounded-[24px] bg-panel p-4 shadow-sm sm:top-[96px] sm:p-5">
-        <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_220px_220px]">
-          <div className="flex items-center rounded-2xl border border-border bg-background px-4 py-3.5">
+    <section className="space-y-4">
+      <div className="surface-border sticky top-[88px] z-20 fade-in-up rounded-[22px] bg-panel p-3 shadow-sm sm:top-[96px] sm:p-4">
+        <div className="hide-scrollbar flex gap-2 overflow-x-auto">
+          <div className="flex min-w-[240px] flex-1 items-center rounded-2xl border border-border bg-background px-4 py-3">
             <svg
               aria-hidden="true"
               className="mr-3 h-4 w-4 shrink-0 text-foreground-muted"
@@ -75,31 +71,24 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
             <input
               className="w-full bg-transparent text-sm placeholder:text-foreground-muted focus:outline-none"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search scripts, games, or hub names"
+              placeholder="Search scripts or games"
               type="search"
               value={search}
             />
           </div>
-          <label className="space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Filter
-            </span>
+          <label className="shrink-0">
             <select
-              className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm"
+              className="h-full min-w-[142px] rounded-2xl border border-border bg-background px-4 py-3 text-sm"
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               value={sortMode}
             >
               <option value="latest">Latest</option>
               <option value="working">Working only</option>
-              <option value="top-rated">Top rated</option>
             </select>
           </label>
-          <label className="space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Game tag
-            </span>
+          <label className="shrink-0">
             <select
-              className="w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-sm"
+              className="h-full min-w-[148px] rounded-2xl border border-border bg-background px-4 py-3 text-sm"
               onChange={(event) => setSelectedGame(event.target.value)}
               value={selectedGame}
             >
@@ -112,7 +101,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
             </select>
           </label>
         </div>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4 text-xs text-foreground-muted">
+        <div className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 text-xs text-foreground-muted">
           <span>{filteredScripts.length} scripts found</span>
           <span>Sorted by {sortMode.replace("-", " ")}</span>
         </div>

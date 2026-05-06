@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s | Aizhu Scripts",
   },
   description:
-    "Mobile-first script library for Roblox game scripts with ratings, verdicts, and guarded copy actions.",
+    "Mobile-first script library for Roblox game scripts with verdicts and guarded copy actions.",
   metadataBase: new URL(siteUrl),
   applicationName: "Aizhu Scripts",
   category: "gaming",

@@ -18,10 +18,6 @@ export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
       </div>
       <dl className="mt-5 space-y-4 text-sm">
         <div className="flex items-center justify-between gap-4">
-          <dt className="text-foreground-muted">Rating</dt>
-          <dd className="font-semibold">{script.rating.toFixed(1)}</dd>
-        </div>
-        <div className="flex items-center justify-between gap-4">
           <dt className="text-foreground-muted">Last updated</dt>
           <dd className="font-semibold">{script.updatedLabel}</dd>
         </div>

@@ -15,9 +15,8 @@ const sampleScripts: ScriptRow[] = [
     script: "loadstring(game:HttpGet('https://example.com/bloxfruit.lua'))()",
     slug: "bloxfruit-auto-farm",
     status: "working",
-    rating: 4.8,
     verdict:
-      "Working well right now. BloxFruit Auto Farm has one of the stronger recent ratings for bloxfruit, so it looks dependable if you still verify it in-game before repeated use.",
+      "Working well right now. It looks dependable if you still verify it in-game before repeated use.",
     published: true,
     created_at: "2026-04-18T10:00:00.000Z",
     updated_at: "2026-05-02T08:00:00.000Z",
@@ -30,7 +29,6 @@ const sampleScripts: ScriptRow[] = [
     script: "loadstring(game:HttpGet('https://example.com/fisch.lua'))()",
     slug: "fisch-catch-assist",
     status: "risk",
-    rating: 4.1,
     verdict:
       "Marked as risk because reliability is mixed. Test on a throwaway flow first and avoid assuming long sessions will remain stable without manual checks.",
     published: true,
@@ -45,7 +43,6 @@ const sampleScripts: ScriptRow[] = [
     script: "loadstring(game:HttpGet('https://example.com/theforge.lua'))()",
     slug: "theforge-crafter",
     status: "patched",
-    rating: 3.7,
     verdict:
       "Patched status means this one is likely outdated. Keep it listed for reference, but expect breakage until it is refreshed against the latest theforge changes.",
     published: true,
@@ -68,7 +65,7 @@ const getCachedScriptRows = unstable_cache(
     const { data, error } = await supabase
       .from("scripts")
       .select(
-        "id,title,slug,game,description,verdict,script,status,rating,published,created_at,updated_at",
+        "id,title,slug,game,description,verdict,script,status,published,created_at,updated_at",
       )
       .eq("published", true)
       .order("updated_at", { ascending: false });
@@ -96,7 +93,7 @@ function buildVerdict(script: ScriptRow) {
   const status = normalizeStatus(script.status);
 
   if (status === "working") {
-    return `Working well right now. ${script.title} has one of the stronger recent ratings for ${script.game}, so it looks dependable if you still verify it in-game before repeated use.`;
+    return `Working well right now. ${script.title} looks dependable if you still verify it in-game before repeated use.`;
   }
 
   if (status === "patched") {
@@ -121,7 +118,6 @@ function mapRowToRecord(script: ScriptRow): ScriptRecord {
     description: script.description,
     script: script.script,
     status: normalizeStatus(script.status),
-    rating: script.rating,
     published: script.published ?? true,
     createdAt: script.created_at,
     updatedAt: script.updated_at,
@@ -137,7 +133,6 @@ function mapRecordToListItem(script: ScriptRecord): ScriptListItem {
     title: script.title,
     game: script.game,
     description: script.description,
-    rating: script.rating,
     slug: script.slug,
     status: script.status,
     updatedAt: script.updatedAt,
