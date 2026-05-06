@@ -39,8 +39,8 @@ export async function createScriptAction(formData: FormData) {
   const title = getField(formData, "title");
   const slug = getField(formData, "slug");
   const game = getField(formData, "game");
+  const thumbnailUrl = getField(formData, "thumbnailUrl");
   const description = getField(formData, "description");
-  const verdict = getField(formData, "verdict");
   const script = getField(formData, "script");
   const status = getField(formData, "status") as ScriptStatus;
   const published = formData.get("published") === "on";
@@ -49,7 +49,6 @@ export async function createScriptAction(formData: FormData) {
     !title ||
     !game ||
     !description ||
-    !verdict ||
     !script ||
     !["working", "patched", "risk"].includes(status)
   ) {
@@ -60,8 +59,8 @@ export async function createScriptAction(formData: FormData) {
     title,
     slug,
     game,
+    thumbnailUrl,
     description,
-    verdict,
     script,
     status,
     published,

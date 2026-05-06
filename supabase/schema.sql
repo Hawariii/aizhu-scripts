@@ -7,6 +7,7 @@ create table if not exists public.scripts (
   game text not null,
   description text not null,
   verdict text not null default '',
+  thumbnail_url text,
   script text not null,
   status text not null check (status in ('working', 'patched', 'risk')),
   rating double precision not null default 0,
@@ -18,6 +19,7 @@ create table if not exists public.scripts (
 alter table public.scripts
   add column if not exists slug text,
   add column if not exists verdict text not null default '',
+  add column if not exists thumbnail_url text,
   add column if not exists published boolean not null default true;
 
 update public.scripts

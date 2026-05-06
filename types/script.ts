@@ -9,9 +9,9 @@ export type ScriptRow = {
   script: string;
   slug?: string;
   status: string;
+  thumbnail_url?: string | null;
   title: string;
   updated_at: string;
-  verdict?: string | null;
 };
 
 export type ScriptRecord = {
@@ -24,10 +24,10 @@ export type ScriptRecord = {
   script: string;
   slug: string;
   status: ScriptStatus;
+  thumbnailUrl: string;
   title: string;
   updatedAt: string;
   updatedLabel: string;
-  verdict: string;
 };
 
 export type ScriptListItem = Pick<
@@ -37,6 +37,7 @@ export type ScriptListItem = Pick<
   | "id"
   | "slug"
   | "status"
+  | "thumbnailUrl"
   | "title"
   | "updatedAt"
   | "updatedLabel"

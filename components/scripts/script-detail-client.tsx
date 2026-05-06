@@ -30,7 +30,7 @@ export function ScriptDetailClient({
   ) : null;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
       <div className="space-y-6">
         <ScriptBody
           accessPanel={accessPanel}

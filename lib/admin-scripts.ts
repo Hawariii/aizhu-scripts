@@ -9,8 +9,8 @@ type CreateScriptInput = {
   script: string;
   slug?: string;
   status: ScriptStatus;
+  thumbnailUrl?: string;
   title: string;
-  verdict: string;
 };
 
 function normalizeSlug(title: string, slug?: string) {
@@ -32,13 +32,13 @@ export async function createScript(input: CreateScriptInput) {
       slug: normalizeSlug(input.title, input.slug),
       game: input.game.trim(),
       description: input.description.trim(),
-      verdict: input.verdict.trim(),
       script: input.script.trim(),
       status: input.status,
+      thumbnail_url: input.thumbnailUrl?.trim() || null,
       published: input.published,
     })
     .select(
-      "id,title,slug,game,description,verdict,script,status,published,created_at,updated_at",
+      "id,title,slug,game,description,script,status,thumbnail_url,published,created_at,updated_at",
     )
     .single();
 
@@ -58,7 +58,7 @@ export async function getAdminScripts() {
   const { data, error } = await supabase
     .from("scripts")
     .select(
-      "id,title,slug,game,description,verdict,script,status,published,created_at,updated_at",
+      "id,title,slug,game,description,script,status,thumbnail_url,published,created_at,updated_at",
     )
     .order("updated_at", { ascending: false })
     .limit(20);

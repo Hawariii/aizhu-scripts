@@ -2,7 +2,7 @@ import { unstable_cache } from "next/cache";
 import { createSupabaseServerClient, hasSupabaseEnv } from "@/lib/supabase";
 import { SUPABASE_CACHE_SECONDS } from "@/lib/constants";
 import type { ScriptListItem, ScriptRecord, ScriptRow, ScriptStatus } from "@/types/script";
-import { slugify } from "@/lib/utils";
+import { buildThumbnailFallback, slugify } from "@/lib/utils";
 
 const VALID_STATUSES: ScriptStatus[] = ["working", "patched", "risk"];
 
@@ -15,8 +15,7 @@ const sampleScripts: ScriptRow[] = [
     script: "loadstring(game:HttpGet('https://example.com/bloxfruit.lua'))()",
     slug: "bloxfruit-auto-farm",
     status: "working",
-    verdict:
-      "Working well right now. It looks dependable if you still verify it in-game before repeated use.",
+    thumbnail_url: null,
     published: true,
     created_at: "2026-04-18T10:00:00.000Z",
     updated_at: "2026-05-02T08:00:00.000Z",
@@ -29,8 +28,7 @@ const sampleScripts: ScriptRow[] = [
     script: "loadstring(game:HttpGet('https://example.com/fisch.lua'))()",
     slug: "fisch-catch-assist",
     status: "risk",
-    verdict:
-      "Marked as risk because reliability is mixed. Test on a throwaway flow first and avoid assuming long sessions will remain stable without manual checks.",
+    thumbnail_url: null,
     published: true,
     created_at: "2026-04-26T10:00:00.000Z",
     updated_at: "2026-05-03T15:45:00.000Z",
@@ -43,8 +41,7 @@ const sampleScripts: ScriptRow[] = [
     script: "loadstring(game:HttpGet('https://example.com/theforge.lua'))()",
     slug: "theforge-crafter",
     status: "patched",
-    verdict:
-      "Patched status means this one is likely outdated. Keep it listed for reference, but expect breakage until it is refreshed against the latest theforge changes.",
+    thumbnail_url: null,
     published: true,
     created_at: "2026-03-30T10:00:00.000Z",
     updated_at: "2026-04-29T12:30:00.000Z",
@@ -65,7 +62,7 @@ const getCachedScriptRows = unstable_cache(
     const { data, error } = await supabase
       .from("scripts")
       .select(
-        "id,title,slug,game,description,verdict,script,status,published,created_at,updated_at",
+        "id,title,slug,game,description,script,status,thumbnail_url,published,created_at,updated_at",
       )
       .eq("published", true)
       .order("updated_at", { ascending: false });
@@ -89,20 +86,6 @@ function normalizeStatus(status: string): ScriptStatus {
     : "risk";
 }
 
-function buildVerdict(script: ScriptRow) {
-  const status = normalizeStatus(script.status);
-
-  if (status === "working") {
-    return `Working well right now. ${script.title} looks dependable if you still verify it in-game before repeated use.`;
-  }
-
-  if (status === "patched") {
-    return `Patched status means this one is likely outdated. Keep it listed for reference, but expect breakage until it is refreshed against the latest ${script.game} changes.`;
-  }
-
-  return `Marked as risk because reliability is mixed. Test on a throwaway flow first and avoid assuming long sessions will remain stable without manual checks.`;
-}
-
 function formatDateLabel(dateString: string) {
   return new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
@@ -118,12 +101,13 @@ function mapRowToRecord(script: ScriptRow): ScriptRecord {
     description: script.description,
     script: script.script,
     status: normalizeStatus(script.status),
+    thumbnailUrl:
+      script.thumbnail_url?.trim() || buildThumbnailFallback(script.title, script.game),
     published: script.published ?? true,
     createdAt: script.created_at,
     updatedAt: script.updated_at,
     createdLabel: formatDateLabel(script.created_at),
     updatedLabel: formatDateLabel(script.updated_at),
-    verdict: script.verdict?.trim() || buildVerdict(script),
   };
 }
 
@@ -135,6 +119,7 @@ function mapRecordToListItem(script: ScriptRecord): ScriptListItem {
     description: script.description,
     slug: script.slug,
     status: script.status,
+    thumbnailUrl: script.thumbnailUrl,
     updatedAt: script.updatedAt,
     updatedLabel: script.updatedLabel,
   };

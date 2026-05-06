@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { addToast } from "@/lib/toast-store";
 
@@ -9,10 +9,6 @@ type ScriptAccessPanelProps = {
   onReveal: () => void;
   scriptId: string;
 };
-
-function getGateDuration() {
-  return Math.floor(Math.random() * 16) + 15;
-}
 
 const supportLinks = [
   {
@@ -35,32 +31,19 @@ export function ScriptAccessPanel({
   scriptId,
 }: ScriptAccessPanelProps) {
   const [isGateOpen, setIsGateOpen] = useState(false);
-  const [countdown, setCountdown] = useState(0);
-
-  const canReveal = countdown === 0;
+  const [completedActions, setCompletedActions] = useState<string[]>([]);
+  const canReveal = completedActions.length === supportLinks.length;
   const sponsorLabel = useMemo(
     () => (isRevealed ? "Script unlocked" : "Support Aizhu"),
     [isRevealed],
   );
-
-  useEffect(() => {
-    if (!isGateOpen || countdown <= 0) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setCountdown((current) => current - 1);
-    }, 1000);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [countdown, isGateOpen]);
 
   function handleShowScript() {
     if (isRevealed) {
       return;
     }
 
-    setCountdown(getGateDuration());
+    setCompletedActions([]);
     setIsGateOpen(true);
     trackEvent("show_script_gate_open", {
       scriptId,
@@ -75,6 +58,17 @@ export function ScriptAccessPanel({
       description: "Script sekarang sudah terbuka dan siap dicopy.",
     });
     trackEvent("show_script_gate_complete", {
+      scriptId,
+    });
+  }
+
+  function handleSupportAction(href: string) {
+    window.open(href, "_blank", "noopener,noreferrer");
+    setCompletedActions((current) =>
+      current.includes(href) ? current : [...current, href],
+    );
+    trackEvent("show_script_support_action", {
+      href,
       scriptId,
     });
   }
@@ -108,30 +102,33 @@ export function ScriptAccessPanel({
               Support before reveal
             </h2>
             <p className="mt-3 text-sm leading-6 text-foreground-muted">
-              Before opening the script, support the channel on YouTube, TikTok,
-              or Instagram. After the timer finishes, you can reveal the code.
+              Open all three links first. Once every action is done, the script
+              unlock button will turn on automatically.
             </p>
             <div className="mt-5 grid gap-3 rounded-[20px] border border-border bg-background-muted p-4">
               {supportLinks.map((link) => (
-                <a
-                  className="flex items-center justify-between rounded-2xl border border-border bg-panel px-4 py-3 text-sm font-medium hover:border-accent/60"
-                  href={link.href}
+                <button
+                  className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium ${
+                    completedActions.includes(link.href)
+                      ? "border-success/40 bg-success/15 text-foreground"
+                      : "border-border bg-panel hover:border-accent/60"
+                  }`}
                   key={link.href}
-                  rel="noreferrer"
-                  target="_blank"
+                  onClick={() => handleSupportAction(link.href)}
+                  type="button"
                 >
                   <span>{link.label}</span>
                   <span className="text-xs uppercase tracking-[0.2em] text-foreground-muted">
-                    Open
+                    {completedActions.includes(link.href) ? "Done" : "Open"}
                   </span>
-                </a>
+                </button>
               ))}
             </div>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-foreground-muted">
                 {canReveal
-                  ? "Support step finished. You can reveal the script now."
-                  : `Unlocking in ${countdown}s`}
+                  ? "All actions finished. You can reveal the script now."
+                  : `${completedActions.length}/${supportLinks.length} actions completed`}
               </p>
               <button
                 className="rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"

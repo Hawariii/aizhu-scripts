@@ -36,9 +36,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               Upload and publish scripts
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground-muted">
-              Create new script entries with title, verdict, code, status, and
-              publish control. Inserts run on the server using the service role
-              key only.
+              Create new script entries with title, thumbnail, code, status,
+              and publish control. Inserts run on the server using the service
+              role key only.
             </p>
           </div>
           <form action={logoutAction}>
@@ -89,6 +89,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           </label>
           <label className="block space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
+              Thumbnail URL
+            </span>
+            <input className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="thumbnailUrl" placeholder="optional-image-url" type="url" />
+            <p className="text-xs text-foreground-muted">
+              Leave empty to use the automatic fallback thumbnail.
+            </p>
+          </label>
+          <label className="block space-y-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
               Status
             </span>
             <select className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" defaultValue="working" name="status">
@@ -106,12 +115,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               Description
             </span>
             <textarea className="min-h-28 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="description" required />
-          </label>
-          <label className="block space-y-2 lg:col-span-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Aizhu verdict
-            </span>
-            <textarea className="min-h-28 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="verdict" required />
           </label>
           <label className="block space-y-2 lg:col-span-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
