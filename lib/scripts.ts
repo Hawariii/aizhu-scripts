@@ -61,9 +61,7 @@ const getCachedScriptRows = unstable_cache(
     const supabase = createSupabaseServerClient();
     const { data, error } = await supabase
       .from("scripts")
-      .select(
-        "id,title,slug,game,description,script,status,thumbnail_url,published,created_at,updated_at",
-      )
+      .select("*")
       .eq("published", true)
       .order("updated_at", { ascending: false });
 

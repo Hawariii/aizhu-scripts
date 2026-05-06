@@ -25,21 +25,24 @@ export async function createScript(input: CreateScriptInput) {
   }
 
   const supabase = createSupabaseAdminClient();
+  const insertPayload: Record<string, string | boolean | null> = {
+    title: input.title.trim(),
+    slug: normalizeSlug(input.title, input.slug),
+    game: input.game.trim(),
+    description: input.description.trim(),
+    script: input.script.trim(),
+    status: input.status,
+    published: input.published,
+  };
+
+  if (input.thumbnailUrl?.trim()) {
+    insertPayload.thumbnail_url = input.thumbnailUrl.trim();
+  }
+
   const { data, error } = await supabase
     .from("scripts")
-    .insert({
-      title: input.title.trim(),
-      slug: normalizeSlug(input.title, input.slug),
-      game: input.game.trim(),
-      description: input.description.trim(),
-      script: input.script.trim(),
-      status: input.status,
-      thumbnail_url: input.thumbnailUrl?.trim() || null,
-      published: input.published,
-    })
-    .select(
-      "id,title,slug,game,description,script,status,thumbnail_url,published,created_at,updated_at",
-    )
+    .insert(insertPayload)
+    .select("*")
     .single();
 
   if (error) {
@@ -57,9 +60,7 @@ export async function getAdminScripts() {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("scripts")
-    .select(
-      "id,title,slug,game,description,script,status,thumbnail_url,published,created_at,updated_at",
-    )
+    .select("*")
     .order("updated_at", { ascending: false })
     .limit(20);
 
