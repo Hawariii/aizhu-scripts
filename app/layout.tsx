@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import { AdSenseScript } from "@/components/ads/adsense-script";
 import { AnalyticsListener } from "@/components/analytics/analytics-listener";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -48,10 +47,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-        >{`document.documentElement.style.colorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';`}</Script>
         <AdSenseScript />
         <Suspense fallback={null}>
           <AnalyticsListener />
