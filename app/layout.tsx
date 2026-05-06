@@ -6,9 +6,10 @@ import { AnalyticsListener } from "@/components/analytics/analytics-listener";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ToastViewport } from "@/components/ui/toast-viewport";
+import { getSiteUrl } from "@/lib/seo";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl = getSiteUrl();
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: "Aizhu Scripts",
   category: "gaming",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    title: "Aizhu Scripts",
+    siteName: "Aizhu Scripts",
+    description:
+      "Mobile-first script library for Roblox game scripts with thumbnails and guarded copy actions.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aizhu Scripts",
+    description:
+      "Mobile-first script library for Roblox game scripts with thumbnails and guarded copy actions.",
+  },
   other: {
     "google-adsense-account":
       process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-5205849290040938",

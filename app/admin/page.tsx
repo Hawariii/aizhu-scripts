@@ -12,6 +12,10 @@ type AdminPageProps = {
 export const metadata: Metadata = {
   title: "Admin",
   description: "Internal panel for uploading and publishing scripts.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export const dynamic = "force-dynamic";

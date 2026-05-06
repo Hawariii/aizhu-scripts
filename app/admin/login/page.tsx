@@ -12,6 +12,10 @@ type AdminLoginPageProps = {
 export const metadata: Metadata = {
   title: "Admin Login",
   description: "Sign in to the Aizhu Scripts admin panel.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export const dynamic = "force-dynamic";

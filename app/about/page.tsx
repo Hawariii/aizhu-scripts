@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Learn what Aizhu Scripts is, how the site works, and what kind of script information is published.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {

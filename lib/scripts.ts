@@ -157,3 +157,12 @@ export async function getScriptById(id: string): Promise<ScriptRecord | null> {
     return null;
   }
 }
+
+export async function getAllScriptRecords(): Promise<ScriptRecord[]> {
+  try {
+    const rows = await getCachedScriptRows();
+    return rows.map(mapRowToRecord);
+  } catch {
+    return [];
+  }
+}

@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Disclaimer",
   description:
     "Read the Aizhu Scripts disclaimer about third-party code, availability, and website affiliation.",
+  alternates: {
+    canonical: "/disclaimer",
+  },
 };
 
 export default function DisclaimerPage() {

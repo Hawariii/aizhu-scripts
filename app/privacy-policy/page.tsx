@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "Read how Aizhu Scripts handles analytics, ads, cookies, and visitor privacy.",
+  alternates: {
+    canonical: "/privacy-policy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
