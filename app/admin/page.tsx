@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { createScriptAction, logoutAction } from "@/app/admin/actions";
+import { AdminScriptForm } from "@/components/admin/admin-script-form";
 import { PageContainer } from "@/components/layout/page-container";
+import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminScripts } from "@/lib/admin-scripts";
 import { hasSupabaseAdminEnv } from "@/lib/supabase";
+import { buildThumbnailFallback } from "@/lib/utils";
 
 type AdminPageProps = {
   searchParams: Promise<{ error?: string; success?: string }>;
@@ -72,98 +75,71 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           </div>
         ) : null}
 
-        <form action={createScriptAction} className="mt-6 grid gap-4 lg:grid-cols-2">
-          <label className="block space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Title
-            </span>
-            <input className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="title" required type="text" />
-          </label>
-          <label className="block space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Slug
-            </span>
-            <input className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="slug" placeholder="optional-auto-generated" type="text" />
-          </label>
-          <label className="block space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Game tag
-            </span>
-            <input className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="game" placeholder="bloxfruit" required type="text" />
-          </label>
-          <label className="block space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Thumbnail URL
-            </span>
-            <input className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="thumbnailUrl" placeholder="optional-image-url" type="url" />
-            <p className="text-xs text-foreground-muted">
-              Leave empty to use the automatic fallback thumbnail.
-            </p>
-          </label>
-          <label className="block space-y-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Status
-            </span>
-            <select className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" defaultValue="working" name="status">
-              <option value="working">working</option>
-              <option value="patched">patched</option>
-              <option value="risk">risk</option>
-            </select>
-          </label>
-          <label className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-sm">
-            <input defaultChecked name="published" type="checkbox" />
-            Publish immediately
-          </label>
-          <label className="block space-y-2 lg:col-span-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Description
-            </span>
-            <textarea className="min-h-28 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm" name="description" required />
-          </label>
-          <label className="block space-y-2 lg:col-span-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
-              Script code
-            </span>
-            <textarea className="min-h-60 w-full rounded-xl border border-border bg-background px-4 py-3 font-mono text-sm" name="script" required />
-          </label>
-          <div className="lg:col-span-2">
-            <button className="rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white" type="submit">
-              Create script
-            </button>
-          </div>
-        </form>
+        <AdminScriptForm action={createScriptAction} />
       </section>
 
       <section className="surface-border rounded-[24px] bg-panel p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
-          Recent scripts
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+              Recent scripts
+            </p>
+            <p className="mt-2 text-sm text-foreground-muted">
+              Latest {recentScripts.length} entries from the database.
+            </p>
+          </div>
+        </div>
         {recentScripts.length === 0 ? (
           <p className="mt-4 text-sm text-foreground-muted">
             No scripts found yet, or admin database env is not configured.
           </p>
         ) : (
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
-              <thead className="text-[11px] uppercase tracking-[0.22em] text-foreground-muted">
-                <tr>
-                  <th className="px-3 py-2">Title</th>
-                  <th className="px-3 py-2">Game</th>
-                  <th className="px-3 py-2">Status</th>
-                  <th className="px-3 py-2">Published</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentScripts.map((script) => (
-                  <tr className="border-t border-border" key={script.id}>
-                    <td className="px-3 py-3">{script.title}</td>
-                    <td className="px-3 py-3 capitalize">{script.game}</td>
-                    <td className="px-3 py-3">{script.status}</td>
-                    <td className="px-3 py-3">{script.published ? "yes" : "no"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            {recentScripts.map((script) => {
+              const thumbnailUrl =
+                script.thumbnail_url?.trim() ||
+                buildThumbnailFallback(script.title, script.game);
+
+              return (
+                <article
+                  className="overflow-hidden rounded-[22px] border border-border bg-background"
+                  key={script.id}
+                >
+                  <ScriptThumbnail
+                    className="aspect-video w-full rounded-none border-0"
+                    script={{
+                      game: script.game,
+                      thumbnailUrl,
+                      title: script.title,
+                    }}
+                  />
+                  <div className="space-y-3 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="line-clamp-2 font-semibold">{script.title}</p>
+                        <p className="mt-1 text-xs uppercase tracking-[0.22em] text-foreground-muted">
+                          {script.game}
+                        </p>
+                      </div>
+                      <span className="rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-foreground-muted">
+                        {script.status}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3 text-xs text-foreground-muted">
+                      <span>{script.published ? "Published" : "Draft"}</span>
+                      <a
+                        className="font-medium text-accent"
+                        href={`/scripts/${script.id}`}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        Open page
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
