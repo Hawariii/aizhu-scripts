@@ -51,7 +51,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
 
   return (
     <section className="space-y-4">
-      <div className="surface-border sticky top-[88px] z-20 fade-in-up rounded-[22px] bg-panel p-3 shadow-sm sm:top-[96px] sm:p-4">
+      <div className="surface-border fade-in-up rounded-[22px] bg-panel p-3 shadow-sm sm:p-4">
         <div className="hide-scrollbar flex gap-2 overflow-x-auto">
           <div className="flex min-w-[240px] flex-1 items-center rounded-2xl border border-border bg-background px-4 py-3">
             <svg
