@@ -1,5 +1,4 @@
 import { GameTagBadge } from "@/components/ui/game-tag-badge";
-import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { ScriptRecord } from "@/types/script";
 
@@ -13,7 +12,6 @@ export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
         Script details
       </p>
-      <ScriptThumbnail className="mt-4 aspect-[16/10] w-full" script={script} />
       <div className="mt-4 flex flex-wrap gap-3">
         <GameTagBadge game={script.game} />
         <StatusBadge status={script.status} />
@@ -26,10 +24,6 @@ export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
         <div className="flex items-center justify-between gap-4">
           <dt className="text-foreground-muted">Created</dt>
           <dd className="font-semibold">{script.createdLabel}</dd>
-        </div>
-        <div className="space-y-2 rounded-[20px] border border-border bg-background-muted p-4">
-          <dt className="text-foreground-muted">Description</dt>
-          <dd className="leading-7">{script.description}</dd>
         </div>
       </dl>
     </aside>

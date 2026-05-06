@@ -31,7 +31,7 @@ export function ScriptDetailClient({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <ScriptBody
           accessPanel={accessPanel}
           copyPanel={copyPanel}
@@ -40,7 +40,7 @@ export function ScriptDetailClient({
         />
         <RelatedScripts items={relatedScripts} />
       </div>
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <ScriptMetaPanel script={script} />
       </div>
     </div>

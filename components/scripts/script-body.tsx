@@ -15,22 +15,21 @@ export function ScriptBody({
   script,
 }: ScriptBodyProps) {
   return (
-    <article className="surface-border fade-in-up rounded-[24px] bg-panel p-5 sm:p-7">
-      <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
-            Script Content
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold">{script.title}</h2>
-        </div>
+    <article className="surface-border fade-in-up min-w-0 overflow-hidden rounded-[24px] bg-panel p-5 sm:p-7">
+      <div className="border-b border-border pb-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+          Script Content
+        </p>
       </div>
       <div className="mt-5 rounded-[20px] border border-border bg-background-muted p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
           Script Code
         </p>
         {isRevealed ? (
-          <pre className="mt-4 overflow-x-auto rounded-2xl border border-border bg-panel p-4 text-sm leading-7 text-foreground">
-            <code>{script.script}</code>
+          <pre className="mt-4 max-w-full overflow-x-auto rounded-2xl border border-border bg-panel p-4 text-sm leading-7 text-foreground whitespace-pre-wrap break-all">
+            <code className="block max-w-full whitespace-pre-wrap break-all">
+              {script.script}
+            </code>
           </pre>
         ) : (
           <div className="mt-4 rounded-2xl border border-dashed border-border bg-panel px-4 py-5 sm:px-5">
