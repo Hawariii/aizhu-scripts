@@ -2,7 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import { createScript } from "@/lib/admin-scripts";
+import { createScript, deleteScript, updateScript } from "@/lib/admin-scripts";
 import {
   clearAdminSession,
   createAdminSession,
@@ -70,4 +70,65 @@ export async function createScriptAction(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/admin");
   redirect("/admin?success=script_created");
+}
+
+export async function updateScriptAction(formData: FormData) {
+  await requireAdmin();
+
+  const scriptId = getField(formData, "scriptId");
+  const title = getField(formData, "title");
+  const slug = getField(formData, "slug");
+  const game = getField(formData, "game");
+  const thumbnailUrl = getField(formData, "thumbnailUrl");
+  const description = getField(formData, "description");
+  const script = getField(formData, "script");
+  const status = getField(formData, "status") as ScriptStatus;
+  const published = formData.get("published") === "on";
+
+  if (
+    !scriptId ||
+    !title ||
+    !game ||
+    !description ||
+    !script ||
+    !["working", "patched", "risk"].includes(status)
+  ) {
+    redirect(`/admin?edit=${scriptId}&error=missing_fields`);
+  }
+
+  await updateScript({
+    id: scriptId,
+    title,
+    slug,
+    game,
+    thumbnailUrl,
+    description,
+    script,
+    status,
+    published,
+  });
+
+  revalidateTag("scripts", "max");
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/scripts/${scriptId}`);
+  redirect("/admin?success=script_updated");
+}
+
+export async function deleteScriptAction(formData: FormData) {
+  await requireAdmin();
+
+  const scriptId = getField(formData, "scriptId");
+
+  if (!scriptId) {
+    redirect("/admin?error=missing_fields");
+  }
+
+  await deleteScript(scriptId);
+
+  revalidateTag("scripts", "max");
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/scripts/${scriptId}`);
+  redirect("/admin?success=script_deleted");
 }

@@ -3,17 +3,27 @@
 import { useMemo, useState } from "react";
 import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { buildThumbnailFallback, slugify } from "@/lib/utils";
+import type { ScriptRow } from "@/types/script";
 
 type AdminScriptFormProps = {
   action: (formData: FormData) => void | Promise<void>;
+  initialScript?: ScriptRow | null;
+  mode?: "create" | "edit";
 };
 
-export function AdminScriptForm({ action }: AdminScriptFormProps) {
-  const [title, setTitle] = useState("");
-  const [slugInput, setSlugInput] = useState("");
-  const [game, setGame] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
-  const [slugTouched, setSlugTouched] = useState(false);
+export function AdminScriptForm({
+  action,
+  initialScript,
+  mode = "create",
+}: AdminScriptFormProps) {
+  const [title, setTitle] = useState(initialScript?.title ?? "");
+  const [slugInput, setSlugInput] = useState(initialScript?.slug ?? "");
+  const [game, setGame] = useState(initialScript?.game ?? "");
+  const [thumbnailUrl, setThumbnailUrl] = useState(
+    initialScript?.thumbnail_url ?? "",
+  );
+  const [slugTouched, setSlugTouched] = useState(Boolean(initialScript?.slug));
+  const initialStatus = initialScript?.status ?? "working";
   const slug = slugTouched ? slugInput : slugify(title);
 
   const previewTitle = title.trim() || "Script Preview";
@@ -24,6 +34,9 @@ export function AdminScriptForm({ action }: AdminScriptFormProps) {
 
   return (
     <form action={action} className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+      {initialScript ? (
+        <input name="scriptId" type="hidden" value={initialScript.id} />
+      ) : null}
       <div className="grid gap-4 lg:grid-cols-2">
         <label className="block space-y-2">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
@@ -90,7 +103,7 @@ export function AdminScriptForm({ action }: AdminScriptFormProps) {
           </span>
           <select
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
-            defaultValue="working"
+            defaultValue={initialStatus}
             name="status"
           >
             <option value="working">working</option>
@@ -99,7 +112,11 @@ export function AdminScriptForm({ action }: AdminScriptFormProps) {
           </select>
         </label>
         <label className="flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-sm">
-          <input defaultChecked name="published" type="checkbox" />
+          <input
+            defaultChecked={initialScript ? Boolean(initialScript.published) : true}
+            name="published"
+            type="checkbox"
+          />
           Publish immediately
         </label>
         <label className="block space-y-2 lg:col-span-2">
@@ -108,6 +125,7 @@ export function AdminScriptForm({ action }: AdminScriptFormProps) {
           </span>
           <textarea
             className="min-h-28 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+            defaultValue={initialScript?.description ?? ""}
             name="description"
             required
           />
@@ -118,6 +136,7 @@ export function AdminScriptForm({ action }: AdminScriptFormProps) {
           </span>
           <textarea
             className="min-h-60 w-full rounded-xl border border-border bg-background px-4 py-3 font-mono text-sm"
+            defaultValue={initialScript?.script ?? ""}
             name="script"
             required
           />
@@ -127,7 +146,7 @@ export function AdminScriptForm({ action }: AdminScriptFormProps) {
             className="rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white"
             type="submit"
           >
-            Create script
+            {mode === "edit" ? "Save changes" : "Create script"}
           </button>
         </div>
       </div>

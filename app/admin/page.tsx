@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { createScriptAction, logoutAction } from "@/app/admin/actions";
+import {
+  createScriptAction,
+  deleteScriptAction,
+  logoutAction,
+  updateScriptAction,
+} from "@/app/admin/actions";
 import { AdminScriptForm } from "@/components/admin/admin-script-form";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { requireAdmin } from "@/lib/admin-auth";
-import { getAdminScripts } from "@/lib/admin-scripts";
+import { getAdminScriptById, getAdminScripts } from "@/lib/admin-scripts";
 import { hasSupabaseAdminEnv } from "@/lib/supabase";
 import { buildThumbnailFallback } from "@/lib/utils";
 
 type AdminPageProps = {
-  searchParams: Promise<{ error?: string; success?: string }>;
+  searchParams: Promise<{ edit?: string; error?: string; success?: string }>;
 };
 
 export const metadata: Metadata = {
@@ -26,10 +31,11 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   await requireAdmin();
 
-  const [{ error, success }, recentScripts] = await Promise.all([
+  const [{ edit, error, success }, recentScripts] = await Promise.all([
     searchParams,
     getAdminScripts(),
   ]);
+  const editingScript = edit ? await getAdminScriptById(edit) : null;
 
   return (
     <PageContainer className="gap-6 pb-16 pt-6 sm:pt-8">
@@ -40,22 +46,32 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               Admin Dashboard
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-              Upload and publish scripts
+              {editingScript ? "Edit script" : "Upload and publish scripts"}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground-muted">
-              Create new script entries with title, thumbnail, code, status,
-              and publish control. Inserts run on the server using the service
-              role key only.
+              {editingScript
+                ? "Update title, thumbnail, code, status, and publish state, then save the changes."
+                : "Create new script entries with title, thumbnail, code, status, and publish control. Inserts run on the server using the service role key only."}
             </p>
           </div>
-          <form action={logoutAction}>
-            <button
-              className="rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold"
-              type="submit"
-            >
-              Logout
-            </button>
-          </form>
+          <div className="flex flex-wrap gap-3">
+            {editingScript ? (
+              <a
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold"
+                href="/admin"
+              >
+                Cancel edit
+              </a>
+            ) : null}
+            <form action={logoutAction}>
+              <button
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold"
+                type="submit"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
         </div>
 
         {!hasSupabaseAdminEnv() ? (
@@ -74,8 +90,22 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             Script created successfully.
           </div>
         ) : null}
+        {success === "script_updated" ? (
+          <div className="mt-6 rounded-[16px] border border-success/30 bg-success/10 p-4 text-sm text-foreground">
+            Script updated successfully.
+          </div>
+        ) : null}
+        {success === "script_deleted" ? (
+          <div className="mt-6 rounded-[16px] border border-success/30 bg-success/10 p-4 text-sm text-foreground">
+            Script deleted successfully.
+          </div>
+        ) : null}
 
-        <AdminScriptForm action={createScriptAction} />
+        <AdminScriptForm
+          action={editingScript ? updateScriptAction : createScriptAction}
+          initialScript={editingScript}
+          mode={editingScript ? "edit" : "create"}
+        />
       </section>
 
       <section className="surface-border rounded-[24px] bg-panel p-6">
@@ -127,14 +157,25 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     </div>
                     <div className="flex items-center justify-between gap-3 text-xs text-foreground-muted">
                       <span>{script.published ? "Published" : "Draft"}</span>
-                      <a
-                        className="font-medium text-accent"
-                        href={`/scripts/${script.id}`}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        Open page
-                      </a>
+                      <div className="flex items-center gap-3">
+                        <a
+                          className="font-medium text-accent"
+                          href={`/scripts/${script.id}`}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          Open page
+                        </a>
+                        <a className="font-medium text-accent" href={`/admin?edit=${script.id}`}>
+                          Edit
+                        </a>
+                        <form action={deleteScriptAction}>
+                          <input name="scriptId" type="hidden" value={script.id} />
+                          <button className="font-medium text-danger" type="submit">
+                            Delete
+                          </button>
+                        </form>
+                      </div>
                     </div>
                   </div>
                 </article>
