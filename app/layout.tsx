@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { AdSenseScript } from "@/components/ads/adsense-script";
 import { AnalyticsListener } from "@/components/analytics/analytics-listener";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -74,6 +75,7 @@ export default function RootLayout({
           <div className="flex-1">{children}</div>
           <SiteFooter />
         </div>
+        <Analytics />
         <ToastViewport />
       </body>
     </html>
