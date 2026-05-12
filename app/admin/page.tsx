@@ -15,6 +15,7 @@ import {
   getAdminScriptById,
   getAdminScripts,
 } from "@/lib/admin-scripts";
+import { getScriptPath } from "@/lib/scripts";
 import { hasSupabaseAdminEnv } from "@/lib/supabase";
 import { buildThumbnailFallback } from "@/lib/utils";
 
@@ -168,7 +169,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                       <div className="flex items-center gap-3">
                         <a
                           className="font-medium text-accent"
-                          href={`/scripts/${script.id}`}
+                          href={getScriptPath({
+                            slug: script.slug || script.id,
+                          })}
                           rel="noreferrer"
                           target="_blank"
                         >

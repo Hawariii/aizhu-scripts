@@ -123,6 +123,10 @@ function mapRecordToListItem(script: ScriptRecord): ScriptListItem {
   };
 }
 
+export function getScriptPath(script: Pick<ScriptRecord, "slug">) {
+  return `/scripts/${script.slug}`;
+}
+
 export async function getScriptsPageData(): Promise<{
   errorMessage?: string;
   games: string[];
@@ -147,10 +151,13 @@ export async function getScriptsPageData(): Promise<{
   }
 }
 
-export async function getScriptById(id: string): Promise<ScriptRecord | null> {
+export async function getScriptBySlug(slug: string): Promise<ScriptRecord | null> {
   try {
     const rows = await getCachedScriptRows();
-    const script = rows.find((entry) => entry.id === id);
+    const script = rows.find((entry) => {
+      const entrySlug = entry.slug?.trim() || slugify(entry.title) || entry.id;
+      return entrySlug === slug;
+    });
 
     return script ? mapRowToRecord(script) : null;
   } catch {

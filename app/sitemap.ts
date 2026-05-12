@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllScriptRecords } from "@/lib/scripts";
+import { getAllScriptRecords, getScriptPath } from "@/lib/scripts";
 import { absoluteUrl, isAbsoluteHttpUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const scriptPages: MetadataRoute.Sitemap = scripts.map((script) => ({
-    url: absoluteUrl(`/scripts/${script.id}`),
+    url: absoluteUrl(getScriptPath(script)),
     lastModified: script.updatedAt,
     changeFrequency: "daily",
     priority: script.status === "working" ? 0.9 : 0.7,

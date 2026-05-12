@@ -10,6 +10,7 @@ import {
   verifyAdminCredentials,
 } from "@/lib/admin-auth";
 import type { ScriptStatus } from "@/types/script";
+import { slugify } from "@/lib/utils";
 
 function getField(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
@@ -69,6 +70,7 @@ export async function createScriptAction(formData: FormData) {
   revalidateTag("scripts", "max");
   revalidatePath("/");
   revalidatePath("/admin");
+  revalidatePath("/sitemap.xml");
   redirect("/admin?success=script_created");
 }
 
@@ -96,7 +98,7 @@ export async function updateScriptAction(formData: FormData) {
     redirect(`/admin?edit=${scriptId}&error=missing_fields`);
   }
 
-  await updateScript({
+  const updatedScript = await updateScript({
     id: scriptId,
     title,
     slug,
@@ -111,7 +113,8 @@ export async function updateScriptAction(formData: FormData) {
   revalidateTag("scripts", "max");
   revalidatePath("/");
   revalidatePath("/admin");
-  revalidatePath(`/scripts/${scriptId}`);
+  revalidatePath(`/scripts/${updatedScript.slug?.trim() || slugify(updatedScript.title)}`);
+  revalidatePath("/sitemap.xml");
   redirect("/admin?success=script_updated");
 }
 
@@ -129,6 +132,6 @@ export async function deleteScriptAction(formData: FormData) {
   revalidateTag("scripts", "max");
   revalidatePath("/");
   revalidatePath("/admin");
-  revalidatePath(`/scripts/${scriptId}`);
+  revalidatePath("/sitemap.xml");
   redirect("/admin?success=script_deleted");
 }

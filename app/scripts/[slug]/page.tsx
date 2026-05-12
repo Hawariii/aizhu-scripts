@@ -1,28 +1,29 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScriptDetailClient } from "@/components/scripts/script-detail-client";
 import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { getScriptById, getScriptsPageData } from "@/lib/scripts";
+import { getScriptBySlug, getScriptsPageData, getScriptPath } from "@/lib/scripts";
 import { absoluteUrl, isAbsoluteHttpUrl } from "@/lib/seo";
 
 type ScriptDetailPageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export const revalidate = 300;
 
 export async function generateStaticParams() {
   const { scripts } = await getScriptsPageData();
-  return scripts.slice(0, 24).map((script) => ({ id: script.id }));
+  return scripts.slice(0, 24).map((script) => ({ slug: script.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: ScriptDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
-  const script = await getScriptById(id);
+  const { slug } = await params;
+  const script = await getScriptBySlug(slug);
 
   if (!script) {
     return {
@@ -43,11 +44,11 @@ export async function generateMetadata({
     title: script.title,
     description: script.description,
     alternates: {
-      canonical: `/scripts/${script.id}`,
+      canonical: getScriptPath(script),
     },
     openGraph: {
       type: "article",
-      url: absoluteUrl(`/scripts/${script.id}`),
+      url: absoluteUrl(getScriptPath(script)),
       title: script.title,
       description: script.description,
       images: image,
@@ -64,8 +65,8 @@ export async function generateMetadata({
 export default async function ScriptDetailPage({
   params,
 }: ScriptDetailPageProps) {
-  const { id } = await params;
-  const script = await getScriptById(id);
+  const { slug } = await params;
+  const script = await getScriptBySlug(slug);
   const { scripts } = await getScriptsPageData();
 
   if (!script) {
@@ -75,9 +76,35 @@ export default async function ScriptDetailPage({
   const relatedScripts = scripts
     .filter((item) => item.id !== script.id && item.game === script.game)
     .slice(0, 4);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    name: script.title,
+    description: script.description,
+    url: absoluteUrl(getScriptPath(script)),
+    dateModified: script.updatedAt,
+    datePublished: script.createdAt,
+    programmingLanguage: "Lua",
+    applicationCategory: "Game Script",
+    codeRepository: absoluteUrl(getScriptPath(script)),
+    image: isAbsoluteHttpUrl(script.thumbnailUrl) ? script.thumbnailUrl : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: "Aizhu Scripts",
+      url: absoluteUrl("/"),
+    },
+    keywords: [script.game, script.status, "roblox scripts", "lua script"],
+  };
 
   return (
     <PageContainer className="gap-5 pb-24 pt-5 sm:gap-6 sm:pt-7">
+      <Script
+        id={`script-jsonld-${script.id}`}
+        strategy="beforeInteractive"
+        type="application/ld+json"
+      >
+        {JSON.stringify(jsonLd)}
+      </Script>
       <div className="surface-border fade-in-up rounded-[24px] bg-panel p-5 sm:p-7">
         <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-foreground-muted">
           <span>Home</span>

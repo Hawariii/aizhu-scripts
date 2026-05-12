@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { getScriptPath } from "@/lib/scripts";
 import type { ScriptListItem } from "@/types/script";
 
 type RelatedScriptsProps = {
@@ -21,7 +22,7 @@ export function RelatedScripts({ items }: RelatedScriptsProps) {
         {items.map((item) => (
           <Link
             className="block overflow-hidden rounded-2xl border border-border bg-background hover:border-accent/60"
-            href={`/scripts/${item.id}`}
+            href={getScriptPath(item)}
             key={item.id}
           >
             <ScriptThumbnail

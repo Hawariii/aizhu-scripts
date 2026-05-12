@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { ScriptCard } from "@/components/scripts/script-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { getScriptPath } from "@/lib/scripts";
 import type { ScriptListItem } from "@/types/script";
 
 type SortMode = "latest" | "working";
@@ -115,7 +116,7 @@ export function HomeControls({ games, initialScripts }: HomeControlsProps) {
       ) : (
         <div className="space-y-3">
           {filteredScripts.map((script, index) => (
-            <Link className="block" href={`/scripts/${script.id}`} key={script.id}>
+            <Link className="block" href={getScriptPath(script)} key={script.id}>
               <ScriptCard index={index} script={script} />
             </Link>
           ))}
