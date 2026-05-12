@@ -4,11 +4,15 @@ import { redirect } from "next/navigation";
 import { createSupabaseAdminClient, hasSupabaseAdminEnv } from "@/lib/supabase";
 
 const ADMIN_COOKIE_NAME = "aizhu_admin_session";
-const SESSION_DURATION_SECONDS = 60 * 60 * 12;
+const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 30;
 
 type AdminUserRow = {
   role: string;
   username: string;
+};
+
+type ParsedAdminSession = AdminUserRow & {
+  expiresAt: number;
 };
 
 function getAdminSessionEnv() {
@@ -82,6 +86,31 @@ export async function createAdminSession(user: AdminUserRow) {
   });
 }
 
+function parseAdminSession(cookieValue: string, secret: string) {
+  const [sessionUsername, role, expiresAt, signature] = cookieValue.split(":");
+
+  if (!sessionUsername || !role || !expiresAt || !signature) {
+    return null;
+  }
+
+  if (Number(expiresAt) < Date.now()) {
+    return null;
+  }
+
+  const expected = signValue(`${sessionUsername}:${role}:${expiresAt}`, secret);
+  const isValid = timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+
+  if (!isValid) {
+    return null;
+  }
+
+  return {
+    username: sessionUsername,
+    role,
+    expiresAt: Number(expiresAt),
+  } satisfies ParsedAdminSession;
+}
+
 export async function clearAdminSession() {
   const cookieStore = await cookies();
   cookieStore.delete(ADMIN_COOKIE_NAME);
@@ -122,23 +151,30 @@ export async function isAdminAuthenticated() {
     return false;
   }
 
-  const [sessionUsername, role, expiresAt, signature] = cookieValue.split(":");
-
-  if (!sessionUsername || !role || !expiresAt || !signature) {
-    return false;
-  }
-
-  if (Number(expiresAt) < Date.now()) {
-    return false;
-  }
-
-  const expected = signValue(`${sessionUsername}:${role}:${expiresAt}`, secret);
-
-  return timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  return Boolean(parseAdminSession(cookieValue, secret));
 }
 
 export async function requireAdmin() {
-  if (!(await isAdminAuthenticated())) {
+  if (!hasAdminSessionEnv()) {
     redirect("/admin/login");
   }
+
+  const { secret } = getAdminSessionEnv();
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(ADMIN_COOKIE_NAME)?.value;
+
+  if (!cookieValue) {
+    redirect("/admin/login");
+  }
+
+  const session = parseAdminSession(cookieValue, secret);
+
+  if (!session) {
+    redirect("/admin/login");
+  }
+
+  await createAdminSession({
+    username: session.username,
+    role: session.role,
+  });
 }

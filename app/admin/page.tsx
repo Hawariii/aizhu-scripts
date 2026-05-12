@@ -5,11 +5,16 @@ import {
   logoutAction,
   updateScriptAction,
 } from "@/app/admin/actions";
+import { AdminOverview } from "@/components/admin/admin-overview";
 import { AdminScriptForm } from "@/components/admin/admin-script-form";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScriptThumbnail } from "@/components/ui/script-thumbnail";
 import { requireAdmin } from "@/lib/admin-auth";
-import { getAdminScriptById, getAdminScripts } from "@/lib/admin-scripts";
+import {
+  getAdminDashboardStats,
+  getAdminScriptById,
+  getAdminScripts,
+} from "@/lib/admin-scripts";
 import { hasSupabaseAdminEnv } from "@/lib/supabase";
 import { buildThumbnailFallback } from "@/lib/utils";
 
@@ -31,14 +36,17 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   await requireAdmin();
 
-  const [{ edit, error, success }, recentScripts] = await Promise.all([
+  const [{ edit, error, success }, recentScripts, stats] = await Promise.all([
     searchParams,
     getAdminScripts(),
+    getAdminDashboardStats(),
   ]);
   const editingScript = edit ? await getAdminScriptById(edit) : null;
 
   return (
     <PageContainer className="gap-6 pb-16 pt-6 sm:pt-8">
+      <AdminOverview stats={stats} />
+
       <section className="surface-border rounded-[24px] bg-panel p-6 sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>

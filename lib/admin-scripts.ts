@@ -141,3 +141,73 @@ export async function getAdminScriptById(id: string) {
 
   return (data as ScriptRow | null) ?? null;
 }
+
+export async function getAdminDashboardStats() {
+  if (!hasSupabaseAdminEnv()) {
+    return {
+      draftCount: 0,
+      publishedCount: 0,
+      statusCounts: {
+        patched: 0,
+        risk: 0,
+        working: 0,
+      },
+      totalScripts: 0,
+      uploadsByDay: [] as Array<{ count: number; label: string }>,
+    };
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("scripts")
+    .select("status,published,created_at");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const rows = (data ?? []) as Array<{
+    created_at: string;
+    published?: boolean;
+    status: string;
+  }>;
+
+  const statusCounts = {
+    patched: 0,
+    risk: 0,
+    working: 0,
+  };
+
+  let publishedCount = 0;
+  let draftCount = 0;
+
+  for (const row of rows) {
+    if (row.status === "working" || row.status === "patched" || row.status === "risk") {
+      statusCounts[row.status] += 1;
+    }
+
+    if (row.published) {
+      publishedCount += 1;
+    } else {
+      draftCount += 1;
+    }
+  }
+
+  const uploadsByDay = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - index));
+    const key = date.toISOString().slice(0, 10);
+    const label = date.toLocaleDateString("en-US", { weekday: "short" });
+    const count = rows.filter((row) => row.created_at.slice(0, 10) === key).length;
+
+    return { label, count };
+  });
+
+  return {
+    draftCount,
+    publishedCount,
+    statusCounts,
+    totalScripts: rows.length,
+    uploadsByDay,
+  };
+}
