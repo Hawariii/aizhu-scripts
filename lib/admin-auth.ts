@@ -172,9 +172,4 @@ export async function requireAdmin() {
   if (!session) {
     redirect("/admin/login");
   }
-
-  await createAdminSession({
-    username: session.username,
-    role: session.role,
-  });
 }
