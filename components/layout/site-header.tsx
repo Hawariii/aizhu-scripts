@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteHeader() {
@@ -7,8 +8,15 @@ export function SiteHeader() {
         <div className="flex items-center justify-between gap-4">
           <Link className="min-w-0 flex-1" href="/">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent text-sm font-bold text-white shadow-sm">
-                AZ
+              <div className="overflow-hidden rounded-2xl border border-border bg-panel shadow-sm">
+                <Image
+                  alt="Aizhu Scripts"
+                  className="h-11 w-11 object-cover"
+                  height={44}
+                  priority
+                  src="/images/icon.png"
+                  width={44}
+                />
               </div>
               <div className="min-w-0">
                 <p className="truncate text-base font-semibold tracking-tight">
