@@ -49,6 +49,11 @@ export const metadata: Metadata = {
     description:
       "Mobile-first script library for Roblox game scripts with thumbnails and guarded copy actions.",
   },
+  icons: {
+    icon: "/images/icon.png",
+    shortcut: "/images/icon.png",
+    apple: "/images/icon.png",
+  },
   other: {
     "google-adsense-account":
       process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-5205849290040938",

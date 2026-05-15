@@ -20,16 +20,13 @@ export function ScriptCard({ index, script }: ScriptCardProps) {
           script={script}
         />
         <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <GameTagBadge game={script.game} />
-            <StatusBadge status={script.status} />
-          </div>
-          <h2 className="mt-3 line-clamp-2 text-lg font-semibold tracking-tight sm:text-xl">
-            {script.title}
-          </h2>
-          <p className="mt-2 line-clamp-3 text-sm leading-7 text-foreground-muted">
-            {script.description}
-          </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <GameTagBadge game={script.game} />
+          <StatusBadge status={script.status} />
+        </div>
+        <h2 className="mt-3 line-clamp-2 text-lg font-semibold tracking-tight sm:text-xl">
+          {script.title}
+        </h2>
           <div className="mt-4 flex items-center justify-between gap-3 text-[11px] uppercase tracking-[0.24em] text-foreground-muted md:mt-auto">
             <span>Updated {script.updatedLabel}</span>
             <span className="shrink-0">Read script</span>

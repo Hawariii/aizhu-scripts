@@ -25,10 +25,6 @@ export function ScriptMetaPanel({ script }: ScriptMetaPanelProps) {
           <dt className="text-foreground-muted">Created</dt>
           <dd className="font-semibold">{script.createdLabel}</dd>
         </div>
-        <div className="rounded-[20px] border border-border bg-background-muted p-4">
-          <dt className="text-foreground-muted">About</dt>
-          <dd className="mt-2 leading-7">{script.description}</dd>
-        </div>
       </dl>
     </aside>
   );

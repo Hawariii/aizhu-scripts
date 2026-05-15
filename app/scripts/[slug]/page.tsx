@@ -130,7 +130,7 @@ export default async function ScriptDetailPage({
           <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
             {script.title}
           </h1>
-          <p className="mt-3 max-w-4xl text-base leading-7 text-foreground-muted">
+          <p className="mt-3 max-w-4xl whitespace-pre-line text-base leading-7 text-foreground-muted">
             {script.description}
           </p>
         </div>
