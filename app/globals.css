@@ -3,12 +3,12 @@
 :root {
   color-scheme: light;
   --background: #f7f7ff;
-  --background-muted: #eef0ff;
-  --panel: #ffffff;
-  --panel-strong: #f3f2ff;
+  --background-muted: #f0f0fb;
+  --panel: #fdfdff;
+  --panel-strong: #f1efff;
   --foreground: #1b1554;
-  --foreground-muted: #6e689b;
-  --border: #dad8f5;
+  --foreground-muted: #635d8d;
+  --border: #d7d4ef;
   --accent: #27187e;
   --accent-strong: #1d1360;
   --success: #15803d;
@@ -53,8 +53,8 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 12%, transparent), transparent 30%),
-    radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent) 8%, transparent), transparent 26%);
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 10%, transparent), transparent 28%),
+    radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent) 7%, transparent), transparent 24%);
   content: "";
   z-index: -1;
 }

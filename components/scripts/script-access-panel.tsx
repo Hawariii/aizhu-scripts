@@ -33,6 +33,7 @@ export function ScriptAccessPanel({
   const [isGateOpen, setIsGateOpen] = useState(false);
   const [completedActions, setCompletedActions] = useState<string[]>([]);
   const canReveal = completedActions.length === supportLinks.length;
+  const progressPercent = (completedActions.length / supportLinks.length) * 100;
   const sponsorLabel = useMemo(
     () => (isRevealed ? "Script unlocked" : "Support Aizhu"),
     [isRevealed],
@@ -75,20 +76,19 @@ export function ScriptAccessPanel({
 
   return (
     <>
-      <div className="surface-border rounded-[20px] bg-panel p-4 sm:p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+      <div className="rounded-[18px] bg-panel px-3.5 py-3 sm:rounded-[20px] sm:px-4 sm:py-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
           Script access
         </p>
         <button
-          className="mt-3 flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
+          className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
           onClick={handleShowScript}
           type="button"
         >
           {isRevealed ? "Script Unlocked" : "Show Script"}
         </button>
-        <p className="mt-3 text-sm leading-7 text-foreground-muted">
-          Open the support panel first, then the script code and copy action
-          will unlock here.
+        <p className="mt-2 text-xs leading-5 text-foreground-muted sm:text-sm sm:leading-6">
+          Complete the support step once to unlock the code.
         </p>
       </div>
 
@@ -105,6 +105,21 @@ export function ScriptAccessPanel({
               Open all three links first. Once every action is done, the script
               unlock button will turn on automatically.
             </p>
+            <div className="mt-4 rounded-[18px] border border-border bg-background-muted p-3.5">
+              <div className="flex items-center justify-between gap-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground-muted">
+                <span>Progress</span>
+                <span>
+                  {completedActions.length}/{supportLinks.length}
+                </span>
+              </div>
+              <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-panel">
+                <div
+                  aria-hidden="true"
+                  className="h-full rounded-full bg-accent"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
             <div className="mt-5 grid gap-3 rounded-[20px] border border-border bg-background-muted p-4">
               {supportLinks.map((link) => (
                 <button

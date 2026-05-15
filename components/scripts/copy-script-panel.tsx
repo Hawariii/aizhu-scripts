@@ -60,12 +60,12 @@ export function CopyScriptPanel({
   }
 
   return (
-    <div className="surface-border rounded-[20px] bg-panel p-4 sm:p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+    <div className="rounded-[18px] bg-panel px-3.5 py-3 sm:rounded-[20px] sm:px-4 sm:py-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">
         Copy script
       </p>
       <button
-        className="mt-3 flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
+        className="mt-2.5 flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
         disabled={isLocked}
         onClick={handleCopy}
         type="button"
@@ -76,8 +76,8 @@ export function CopyScriptPanel({
             ? "Copying..."
             : "Copy Script"}
       </button>
-      <p className="mt-3 text-sm leading-7 text-foreground-muted">
-        The reveal gate is complete. Copy is now available, with a cooldown of{" "}
+      <p className="mt-2 text-xs leading-5 text-foreground-muted sm:text-sm sm:leading-6">
+        Copy is ready, with a cooldown of{" "}
         {COOLDOWN_SECONDS} seconds after each click.
       </p>
     </div>
