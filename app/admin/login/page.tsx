@@ -53,6 +53,11 @@ export default async function AdminLoginPage({
             Username or password is invalid.
           </div>
         ) : null}
+        {error === "too_many_attempts" ? (
+          <div className="mt-5 rounded-[16px] border border-warning/30 bg-warning/10 p-4 text-sm text-foreground">
+            Too many login attempts. Please wait a while before trying again.
+          </div>
+        ) : null}
         <form action={loginAction} className="mt-6 space-y-4">
           <label className="block space-y-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground-muted">

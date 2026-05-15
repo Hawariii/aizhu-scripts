@@ -17,6 +17,12 @@ type UpdateScriptInput = CreateScriptInput & {
   id: string;
 };
 
+type GetAdminScriptsInput = {
+  published?: "all" | "draft" | "published";
+  query?: string;
+  status?: "all" | ScriptStatus;
+};
+
 function normalizeSlug(title: string, slug?: string) {
   return slugify(slug?.trim() || title) || `script-${Date.now()}`;
 }
@@ -104,17 +110,34 @@ export async function deleteScript(id: string) {
   }
 }
 
-export async function getAdminScripts() {
+export async function getAdminScripts(input: GetAdminScriptsInput = {}) {
   if (!hasSupabaseAdminEnv()) {
     return [];
   }
 
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("scripts")
     .select("*")
     .order("updated_at", { ascending: false })
-    .limit(20);
+    .limit(40);
+
+  if (input.query?.trim()) {
+    const term = input.query.trim();
+    query = query.or(`title.ilike.%${term}%,game.ilike.%${term}%,slug.ilike.%${term}%`);
+  }
+
+  if (input.status && input.status !== "all") {
+    query = query.eq("status", input.status);
+  }
+
+  if (input.published === "published") {
+    query = query.eq("published", true);
+  } else if (input.published === "draft") {
+    query = query.eq("published", false);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(error.message);

@@ -5,6 +5,7 @@ import {
   logoutAction,
   updateScriptAction,
 } from "@/app/admin/actions";
+import { AdminDeleteForm } from "@/components/admin/admin-delete-form";
 import { AdminOverview } from "@/components/admin/admin-overview";
 import { AdminScriptForm } from "@/components/admin/admin-script-form";
 import { PageContainer } from "@/components/layout/page-container";
@@ -20,7 +21,14 @@ import { hasSupabaseAdminEnv } from "@/lib/supabase";
 import { buildThumbnailFallback } from "@/lib/utils";
 
 type AdminPageProps = {
-  searchParams: Promise<{ edit?: string; error?: string; success?: string }>;
+  searchParams: Promise<{
+    edit?: string;
+    error?: string;
+    published?: string;
+    q?: string;
+    status?: string;
+    success?: string;
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -37,9 +45,21 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   await requireAdmin();
 
-  const [{ edit, error, success }, recentScripts, stats] = await Promise.all([
-    searchParams,
-    getAdminScripts(),
+  const { edit, error, published, q, status, success } = await searchParams;
+  const searchQuery = q?.trim() ?? "";
+  const statusFilter =
+    status === "working" || status === "patched" || status === "risk"
+      ? status
+      : "all";
+  const publishedFilter =
+    published === "published" || published === "draft" ? published : "all";
+
+  const [recentScripts, stats] = await Promise.all([
+    getAdminScripts({
+      published: publishedFilter,
+      query: searchQuery,
+      status: statusFilter,
+    }),
     getAdminDashboardStats(),
   ]);
   const editingScript = edit ? await getAdminScriptById(edit) : null;
@@ -118,19 +138,63 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       </section>
 
       <section className="surface-border rounded-[24px] bg-panel p-6">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
               Recent scripts
             </p>
             <p className="mt-2 text-sm text-foreground-muted">
-              Latest {recentScripts.length} entries from the database.
+              {searchQuery || statusFilter !== "all" || publishedFilter !== "all"
+                ? `${recentScripts.length} matching entries`
+                : `Latest ${recentScripts.length} entries from the database.`}
             </p>
           </div>
+          <form className="grid gap-3 sm:grid-cols-[minmax(220px,1fr)_140px_160px_auto]">
+            <input
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm"
+              defaultValue={searchQuery}
+              name="q"
+              placeholder="Search title, slug, or game"
+              type="search"
+            />
+            <select
+              className="rounded-xl border border-border bg-background px-4 py-3 text-sm"
+              defaultValue={statusFilter}
+              name="status"
+            >
+              <option value="all">All status</option>
+              <option value="working">working</option>
+              <option value="patched">patched</option>
+              <option value="risk">risk</option>
+            </select>
+            <select
+              className="rounded-xl border border-border bg-background px-4 py-3 text-sm"
+              defaultValue={publishedFilter}
+              name="published"
+            >
+              <option value="all">All visibility</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+            <div className="flex gap-3">
+              <button
+                className="rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white"
+                type="submit"
+              >
+                Filter
+              </button>
+              <a
+                className="rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold"
+                href="/admin"
+              >
+                Reset
+              </a>
+            </div>
+          </form>
         </div>
         {recentScripts.length === 0 ? (
           <p className="mt-4 text-sm text-foreground-muted">
-            No scripts found yet, or admin database env is not configured.
+            No scripts found for the current filter.
           </p>
         ) : (
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
@@ -180,12 +244,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                         <a className="font-medium text-accent" href={`/admin?edit=${script.id}`}>
                           Edit
                         </a>
-                        <form action={deleteScriptAction}>
-                          <input name="scriptId" type="hidden" value={script.id} />
-                          <button className="font-medium text-danger" type="submit">
-                            Delete
-                          </button>
-                        </form>
+                        <AdminDeleteForm
+                          action={deleteScriptAction}
+                          scriptId={script.id}
+                          title={script.title}
+                        />
                       </div>
                     </div>
                   </div>

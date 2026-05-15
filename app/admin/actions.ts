@@ -2,6 +2,11 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  clearFailedLoginAttempts,
+  getLoginRateLimitState,
+  recordFailedLoginAttempt,
+} from "@/lib/admin-login-rate-limit";
 import { createScript, deleteScript, updateScript } from "@/lib/admin-scripts";
 import {
   clearAdminSession,
@@ -19,12 +24,20 @@ function getField(formData: FormData, key: string) {
 export async function loginAction(formData: FormData) {
   const username = getField(formData, "username");
   const password = getField(formData, "password");
+  const rateLimit = await getLoginRateLimitState(username);
+
+  if (rateLimit.locked) {
+    redirect("/admin/login?error=too_many_attempts");
+  }
+
   const adminUser = await verifyAdminCredentials(username, password);
 
   if (!adminUser) {
+    await recordFailedLoginAttempt(username);
     redirect("/admin/login?error=invalid_credentials");
   }
 
+  await clearFailedLoginAttempts(username);
   await createAdminSession(adminUser);
   redirect("/admin");
 }
