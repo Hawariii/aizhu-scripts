@@ -29,9 +29,6 @@ export function SiteHeader() {
             </div>
           </Link>
 
-          <div className="hidden rounded-full border border-border bg-background-muted px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground-muted sm:block">
-            Read-only index
-          </div>
         </div>
 
         <nav className="hide-scrollbar flex items-center gap-2 overflow-x-auto pb-1">

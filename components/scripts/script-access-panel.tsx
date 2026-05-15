@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { trackEvent } from "@/lib/analytics";
 import { addToast } from "@/lib/toast-store";
 
@@ -38,6 +39,19 @@ export function ScriptAccessPanel({
     () => (isRevealed ? "Script unlocked" : "Support Aizhu"),
     [isRevealed],
   );
+
+  useEffect(() => {
+    if (!isGateOpen) {
+      return;
+    }
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isGateOpen]);
 
   function handleShowScript() {
     if (isRevealed) {
@@ -92,71 +106,76 @@ export function ScriptAccessPanel({
         </p>
       </div>
 
-      {isGateOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-6">
-          <div className="surface-border w-full max-w-lg rounded-[24px] bg-panel p-5 shadow-xl sm:p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
-              {sponsorLabel}
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold">
-              Support before reveal
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-foreground-muted">
-              Open all three links first. Once every action is done, the script
-              unlock button will turn on automatically.
-            </p>
-            <div className="mt-4 rounded-[18px] border border-border bg-background-muted p-3.5">
-              <div className="flex items-center justify-between gap-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground-muted">
-                <span>Progress</span>
-                <span>
-                  {completedActions.length}/{supportLinks.length}
-                </span>
+      {isGateOpen && typeof document !== "undefined"
+        ? createPortal(
+            <div className="fixed inset-0 z-[90] overflow-y-auto bg-black/72 backdrop-blur-[2px]">
+              <div className="flex min-h-dvh items-center justify-center p-3 sm:p-6">
+                <div className="surface-border w-full max-w-xl rounded-[26px] bg-panel p-5 shadow-xl sm:p-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+                    {sponsorLabel}
+                  </p>
+                  <h2 className="mt-3 text-2xl font-semibold">
+                    Support before reveal
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-foreground-muted">
+                    Open all three links first. Once every action is done, the
+                    script unlock button will turn on automatically.
+                  </p>
+                  <div className="mt-4 rounded-[18px] border border-border bg-background-muted p-3.5">
+                    <div className="flex items-center justify-between gap-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground-muted">
+                      <span>Progress</span>
+                      <span>
+                        {completedActions.length}/{supportLinks.length}
+                      </span>
+                    </div>
+                    <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-panel">
+                      <div
+                        aria-hidden="true"
+                        className="h-full rounded-full bg-accent"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-5 grid gap-3 rounded-[20px] border border-border bg-background-muted p-4">
+                    {supportLinks.map((link) => (
+                      <button
+                        className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium ${
+                          completedActions.includes(link.href)
+                            ? "border-success/40 bg-success/15 text-foreground"
+                            : "border-border bg-panel hover:border-accent/60"
+                        }`}
+                        key={link.href}
+                        onClick={() => handleSupportAction(link.href)}
+                        type="button"
+                      >
+                        <span>{link.label}</span>
+                        <span className="text-xs uppercase tracking-[0.2em] text-foreground-muted">
+                          {completedActions.includes(link.href) ? "Done" : "Open"}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm text-foreground-muted">
+                      {canReveal
+                        ? "All actions finished. You can reveal the script now."
+                        : `${completedActions.length}/${supportLinks.length} actions completed`}
+                    </p>
+                    <button
+                      className="rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
+                      disabled={!canReveal}
+                      onClick={handleReveal}
+                      type="button"
+                    >
+                      Unlock Script
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-panel">
-                <div
-                  aria-hidden="true"
-                  className="h-full rounded-full bg-accent"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-            </div>
-            <div className="mt-5 grid gap-3 rounded-[20px] border border-border bg-background-muted p-4">
-              {supportLinks.map((link) => (
-                <button
-                  className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium ${
-                    completedActions.includes(link.href)
-                      ? "border-success/40 bg-success/15 text-foreground"
-                      : "border-border bg-panel hover:border-accent/60"
-                  }`}
-                  key={link.href}
-                  onClick={() => handleSupportAction(link.href)}
-                  type="button"
-                >
-                  <span>{link.label}</span>
-                  <span className="text-xs uppercase tracking-[0.2em] text-foreground-muted">
-                    {completedActions.includes(link.href) ? "Done" : "Open"}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-foreground-muted">
-                {canReveal
-                  ? "All actions finished. You can reveal the script now."
-                  : `${completedActions.length}/${supportLinks.length} actions completed`}
-              </p>
-              <button
-                className="rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-background-muted disabled:text-foreground-muted"
-                disabled={!canReveal}
-                onClick={handleReveal}
-                type="button"
-              >
-                Unlock Script
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
